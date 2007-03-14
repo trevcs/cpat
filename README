@@ -1,0 +1,9 @@
+cpat - a curses-based solitaire game
+
+CPat is collection of solitaire card games. Different games
+can be chosen from a menu at startup. Games implemented in
+this collection include Freecell, Klondike, Spider and many
+more.
+
+Author:
+Trevor Carey-Smith <trev at highwater dot co dot nz>
