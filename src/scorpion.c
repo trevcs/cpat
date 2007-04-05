@@ -71,7 +71,7 @@ static void play(GameInfo* g)
 	    continue;
 	else if (src < g->num_cols)
 	{
-	    if (src==dst)
+	    if (dst==NOCARD)
 	    {
 		show_error("Excuse me?",g->input);
 		continue;

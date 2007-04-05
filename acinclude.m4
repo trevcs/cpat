@@ -3,7 +3,7 @@ dnl
 dnl Detect SysV compatible curses, such as ncurses.
 dnl
 dnl 2006-02-18:  Trevor Carey-Smith
-dnl	Altered so that the default in ncurses and the option is
+dnl	Altered so that the default is ncurses and the option is
 dnl changed to "--with-curses" to force use of curses over ncurses.
 dnl If a curses library is found, it is added to LIBS. 
 dnl Also, it fails if no curses library is found.

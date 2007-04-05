@@ -137,7 +137,10 @@ static void play(GameInfo* g)
 	    for (j=0;j<g->num_cols;j++)
 	    {
 		if (check_sequence(SUIT_LENGTH,j,ASC,IN_SUIT,NO_WRAP,g))
+                {
+                    show_error(" ",g->input); // remove non-errors
 		    continue;
+                }
 		if (number_found++)
 		    nanosleep(&pauselength,&pauseleft);
 		/* move 13 cards to foundation */
