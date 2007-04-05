@@ -778,18 +778,31 @@ move_card(int src,int dst,int number,GameInfo* g)
     }
     else
     {
-	card[0]=g->foundation[src-g->num_cols-g->num_free];
-	if (g->foun_size[src-g->num_cols-g->num_free]==SUIT_LENGTH)
-	    g->finished_foundations--;
-
-	if (--g->foun_size[src-g->num_cols-g->num_free]==0)
-	    g->foundation[src-g->num_cols-g->num_free]=NOCARD;
-	else
+	for (j=0;j<number;j++)
 	{
-	    suit=g->foundation[src-g->num_cols-g->num_free]--/SUIT_LENGTH;
-	    if (g->foundation[src-g->num_cols-g->num_free]/SUIT_LENGTH!=suit)
-		g->foundation[src-g->num_cols-g->num_free]+=SUIT_LENGTH;
+	    card[j]=g->foundation[src-g->num_cols-g->num_free];
+	    if (g->foun_size[src-g->num_cols-g->num_free]==SUIT_LENGTH)
+	       	g->finished_foundations--;
 
+	    if (--g->foun_size[src-g->num_cols-g->num_free]==0)
+	    {
+		g->foundation[src-g->num_cols-g->num_free]=NOCARD;
+		if (j<number-1)
+		{
+		    endwin();
+		    puts ("CPat Error: move_card(): tryed to move too many cards off a foundation pile.");
+		    exit (1);
+		}
+	    }
+	    else
+	    {
+	       	suit=g->foundation[src-g->num_cols-g->num_free]/SUIT_LENGTH;
+	       	g->foundation[src-g->num_cols-g->num_free] +=
+			(g->foun_dir==DESC)?1:-1;
+		if (g->foundation[src-g->num_cols-g->num_free]/SUIT_LENGTH!=suit)
+		    g->foundation[src-g->num_cols-g->num_free] += 
+			SUIT_LENGTH*((g->foun_dir==DESC)?-1:1);
+	    }
 	}
 	draw_piles(g->found,g);
     }
