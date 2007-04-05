@@ -1,0 +1,219 @@
+2007-04-04 Trevor Carey-Smith <trev@highwater.co.nz>
+    * configure.in: Version number to 0.9.1
+    * common.c: move_card() changed so that when undoing a stack of cards from
+    the foundations (i.e. in spider) the stack is handled correctly.
+    * scorpion.c: bugfix: doesn't crash when trying to move a card from and to
+    the same column.
+
+2007-01-11 Trevor Carey-Smith <trev@highwater.co.nz>
+    * common.c: Removed the 'x' option from grab_input().
+    * document.c,cpat.6: Removed 'x' documentation.
+
+2007-01-11 Trevor Carey-Smith <trev@highwater.co.nz>
+    * configure.in: Version number to 0.9
+    * common.c: changed grab_input() so that it takes characters not strings.
+    Now you don't have to press enter after typing a command. Commands are 
+    the same except the number must come first and single 'o' and 'p'
+    commands are now double ('oo' and 'pp'). The old 'pp' is obtained using
+    a capital 'P'.
+    * cpat.c: added a few curses initialisation commands to prevent echoing
+    characters and to grab the backspace key.
+    * document.c,cpat.6: adjusted the help text to say the above.
+
+2006-11-10 Trevor Carey-Smith <trev@highwater.co.nz>
+    * cpat.c: changed menu() so that it can also display additional phrases.
+    * common.c: changed game_finished() to use menu().
+    * common.c,document.c: changed wp() so that it always replaces whole
+    screen, not just prints paragraphs.
+    * all game srcs: changed to use new menu function (kill_windows() is
+    called from menu).
+
+2006-10-06 Trevor Carey-Smith <trev@highwater.co.nz>
+    * freecell.c,klondike.c,strategy.c: Added option to start-up menu to
+    allowing you to return to the main menu without quitting.
+
+2006-06-07 Trevor Carey-Smith <trev@highwater.co.nz>
+    * common.c: fixed bug in undo_move() in the UNDO_DISCARD block. It
+    previously didn't account for moving a card off the discard to the
+    foundations.
+
+2006-06-26 Trevor Carey-Smith <trev@highwater.co.nz>
+    * configure.in: Version number to 0.8
+
+2006-06-22 Trevor Carey-Smith <trev@highwater.co.nz>
+    * cpat.c: replaced menu_screen() and choose_game() with menu(), which also
+    replaces the options() subroutines in strategy, klondike and freecell.
+    * all game srcs: changed the wrapper function to redraw the screen
+    properly if a menu is used at the start of the game (games mentioned
+    above).
+
+2006-06-21 Trevor Carey-Smith <trev@highwater.co.nz>
+    * strategy.c: Fixed bugs.
+    * document.c: Added rules for strategy.
+    * cpat.c: created menu_screen() by generalising choose_game() to be used
+    for other menus.
+    * strategy.c,klondike.c: added options() subroutine to each of these games
+    to allow some basic parameters to be changed.
+
+2006-06-20 Trevor Carey-Smith <trev@highwater.co.nz>
+    * strategy.c: Added new game. Still buggy.
+    * cpat.c,cpat.h: As above.
+
+2006-06-19 Trevor Carey-Smith <trev@highwater.co.nz>
+    * common.c: Changed undo_moves() so that you can only undo moves that do
+    not reveal any new information.
+    * cpat.c: added a command line switch (--cheat) to override above
+    limitation!!
+    * cpat.h: added allow_undo to game structure.
+    * cpat.6,document.c: included documentation for undo functionality.
+    * configure.in: Version number to 0.7
+
+2006-06-02 Trevor Carey-Smith <trev@highwater.co.nz>
+    * most srcs: Added multiple level undo functionality. All the moves made
+    during a game are stored in a linked list called undo in the game
+    structure.
+
+2006-06-02 Trevor Carey-Smith <trev@highwater.co.nz>
+    * klondike.c: Added section to play() that removes the need to specify
+    how many cards you want to move from column to column.
+    * document.c: Reflects above change.
+    * configure.in: Version number to 0.6
+
+2006-05-19 Trevor Carey-Smith <trev@highwater.co.nz>
+    * common.c: Changed GameFinished() to include an option to restart the
+    game being played with the same seed.
+    * All game srcs: Added a second call to init_vars() to mirror above
+    change.
+
+2006-05-18 Trevor Carey-Smith <trev@highwater.co.nz>
+    * cpat.c: Added command line option to increase speed of automoves.
+    * cpat.6: Reflects above change.
+
+2006-05-04 Trevor Carey-Smith <trev@highwater.co.nz>
+    * scorpion.c: Fixed bug that let you try to move a column onto itself.
+
+2006-05-03 Trevor Carey-Smith <trev@highwater.co.nz>
+    * scorpion.c: Added section to play() that removes the need to specify
+    how many cards you want to move from column to column.
+    * document.c: Reflects above change.
+
+2006-04-13 Trevor Carey-Smith <trev@highwater.co.nz>
+    * document.c,cpat.6: made some minor typo changes.
+
+2006-04-13 Trevor Carey-Smith <trev@highwater.co.nz>
+    * configure.in: version number to 0.5
+
+2006-03-30 Trevor Carey-Smith <trev@highwater.co.nz>
+    * penguin.c: fixed bug in initial deal. Didn't cover possibility that any
+    of the three initial foundation cards could be in the left over 3 cards of
+    the deck.
+
+2006-03-24 Trevor Carey-Smith <trev@highwater.co.nz>
+    * yukon.c: added new game.
+    * common.c: check_sequence() removed option for ANY_CARD, added option for
+    ANY_ORDER.
+    * cpat.h,scorpion.c: altered for above change.
+
+2006-03-24 Trevor Carey-Smith <trev@highwater.co.nz>
+    * all game srcs: bugfix - added foun_start=ACE to games whose foundations
+    always start at ACE.
+    * configure.in: version number to 0.4.1
+
+2006-03-23 Trevor Carey-Smith <trev@highwater.co.nz>
+    * cpat.c: choose_game() altered to work with different screen sizes and
+    to exit with an error if the screen is too small.
+    * common.c: create_windows() altered to return 1 and produce error if the
+    screen is too small for any particular game.
+    * all game srcs: changed call to create_windows() to return to main() if
+    it returns a 1.
+    * scorpion.c,penguin.c: added new games.
+    * document.c: added game rules for scorpion, penguin and bakersdozen.
+    * other things I may have forgotten.
+    * configure.in: version number to 0.4
+
+2006-03-10 Trevor Carey-Smith <trev@highwater.co.nz>
+    * common.c: create_windows() altered to be more versatile with terminal
+    size and game board size; hints and input boards can now go below the main
+    board if there is no room on the right. init_hints() now prints only as
+    many hints as will fit in the hint board, also prints hints on one line if
+    need be. show_error() can now display error on same line as Move command
+    if need be, also now adds newlines where needed automatically.
+    * freecell.c,klondike.c,spider.c,fortythieves.c,common.c: removed all
+    newlines from calls to show_error().
+    * bakersdozen.c: added new game.
+
+2006-03-01 Trevor Carey-Smith <trev@highwater.co.nz>
+    * fortythieves: bug was a missing continue if no dst chosen.
+    * document.c: games specific rules and help added for klondike, spider and
+    40 thieves.
+    * doc/cpat.6: updated to include command line options and also the how to
+    move information. Removed the Freecell game rules.
+    * configure.in: version number to 0.3
+
+2006-02-27 Trevor Carey-Smith <trev@highwater.co.nz>
+    * fortythieves: bug in moving cards to foundation. Only happened once??
+    * common.c: added dump_vars(). It prints some useful variables when 'z' is
+    pressed during a game.
+
+2006-02-25 Trevor Carey-Smith <trev@highwater.co.nz>
+    * klondike.c,freecell.c,spider.c: Made use of common functions created
+    yesterday.
+
+2006-02-24 Trevor Carey-Smith <trev@highwater.co.nz>
+    * common.c,common.h: Created some functions for common actions:
+    init_deck(), deal_deck(), foundation_automove(), roll_deckcards(),
+    check_sequence(), check_move().
+    * cpat.h: Added constants: ASC, DESC, IN_SUIT, ALT_COL, ANY_SUIT
+    * cpat.c,cpat.h: moved the pause_length,pause_left structures from
+    individual game files to globals.
+    * fortythieves.c: Made use of above functions.
+
+2006-02-23 Trevor Carey-Smith <trev@highwater.co.nz>
+    * fortythieves.c: added new game
+    * cpat.c: changed choose_game() to make list of games automatically
+    * cpat.h,cpat.c: added fortythieves stuff
+    * common.c: move_cards() - fixed bug when more than four foundations, now
+    it shifts to second group when it needs to not when first group is
+    complete.
+
+2006-02-22 Trevor Carey-Smith <trev@highwater.co.nz>
+    * cpat.c,cpat.h: got annoyed with argp's limited deployment and converted
+    to getopt and getopt_long
+    * configure.in: added test for getopt.h and getopt_long
+
+2006-02-21 Trevor Carey-Smith <trev@highwater.co.nz>
+    * cpat.c,cpat.h: added argp.h functionality to produce version number,
+    help etc. Option for providing seed included.
+    * configure.in: minor changes to include bug-address/version string.
+    * common.c: simplified grab_input to use switch/case.
+
+2006-02-20 Trevor Carey-Smith <trev@highwater.co.nz>
+    * common.c: changed wp() to handle more than one paragraph.
+    * document.c: Rewrote existing functions to look better now wp() works
+    better. Also added movehelp().
+    * document.h: Added movehelp() prototype;
+    * common.c: changed 'freepile' command ('v') to 'other' pile ('o').
+    * configure.in: version number to 0.2
+
+2006-02-18 Trevor Carey-Smith <trev@highwater.co.nz>
+    * configure.in, Makefile.am, src/Makefile.am, doc/Makefile.am: converted
+    build process to gnu autotools.
+    * acinclude.m4: added an amended version of mp_with_curses.
+    * *.h, *.c: moved to src/
+    * cpat.6: moved to doc/
+    * AUTHORS: initial revision.
+    * cpat.c, common.c: changed color definitions so that cards still work
+    when terminal has no color. CARDSPACE, NOCARD and spades/clubs are in
+    reverse video.
+    * common.c: In printcard(), added display of number of cards left in 
+    deck when printing a CARDBACK.
+    * cpat.h: Altered to conform to autoconf. Added rule for missing
+    nanosleep function. Removed "#include <term.h>".
+
+2006-02-17 Trevor Carey-Smith <trev@highwater.co.nz>
+    * Makefile: removed hard-coded path to rm.
+
+2006-02-16 Trevor Carey-Smith <trev@highwater.co.nz>
+
+    * cpat.c, common.c, document.c, freecell.c, spider.c, klondike.c, cpat.h,
+    common.h, document.h, cpat.6, Makefile, README, INSTALL: initial revision
