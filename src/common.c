@@ -893,6 +893,7 @@ undo_move(GameInfo* g)
 		g->face_down=0;
 		g->freepile[0]=CARDSPACE;
 		g->freepile[1]=g->deck[g->face_down];
+		g->deals--;
 	    }
 	    else
 	    {
@@ -918,6 +919,8 @@ undo_move(GameInfo* g)
 	/* Two pops: one to remove what the above move_card adds!! */
 	g->undo = pop_items(g->undo);
 	g->undo = pop_items(g->undo);
+	/* subtract two: one to remove what the above move_card adds */
+	g->moves-=2;
     }
 }
 
