@@ -28,7 +28,7 @@ init_vars(GameInfo* g)
     g->num_free=0;
     g->num_packs=1;
     g->turn_no=1;
-    g->num_deals=1;
+//    g->num_deals=1;
     g->foun_dir=ASC;
     g->foun_start=ACE;
 

@@ -26,7 +26,8 @@ static int init_vars(GameInfo* g)
 
     snprintf(title,40,"Welcome to %s",names[g->game]);
 
-    switch(menu(num_items,items,title,"Choose normal or easy:",0,items)) 
+    g->variation=menu(num_items,items,title,"Choose normal or easy:",0,items);
+    switch(g->variation) 
     {
 	case 0:	
 	    g->turn_no=3;

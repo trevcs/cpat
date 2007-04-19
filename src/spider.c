@@ -27,6 +27,7 @@ static void init_vars(GameInfo* g)
     g->num_packs=2;
     g->foun_dir=DESC;
     g->foun_start=ACE;
+    g->num_deals=5;
 
     init_deck(g);
 
@@ -47,7 +48,7 @@ static void init_vars(GameInfo* g)
 
     /* No moves yet!! */
     g->moves=0;
-    g->deals=5; /* number of deals left */
+    g->deals=0; /* number of deals left */
     g->finished_foundations=0;
 }
 
@@ -90,7 +91,7 @@ static void play(GameInfo* g)
 	/* Deal out 10 new cards */
 	else if (src<g->num_cols+g->num_free)
 	{
-	    if (g->deals==0)
+	    if (g->deals==g->num_deals)
 	    {
 		show_error("No deals left.",g->input);
 		continue;
@@ -113,12 +114,13 @@ static void play(GameInfo* g)
 		g->print_col[j]=1;
 		g->undo = push_items(g->undo,g->num_cols,j,j+1,UNDO_DEAL);
 	    }
-	    if (--g->deals==0)
+	    if (++g->deals==g->num_deals)
 		g->freepile[0]=CARDSPACE;
 	    draw_piles(g->free,g);
 	    draw_piles(g->main,g);
 	    snprintf(temp_str,20,"%d %s left.",
-		    g->deals,(g->deals==1)?"deal":"deals");
+		    g->num_deals-g->deals,
+		    (g->num_deals-g->deals)==1?"deal":"deals");
 	    show_error(temp_str,g->input);
 	    continue;
 	}

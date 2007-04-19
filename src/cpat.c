@@ -25,11 +25,13 @@
  *****************************************************************************/
 
 #include "cpat.h"
+#include "highscores.h"
 
 /* To catch kill signals and exit cleanly */
 void
 die(int onsig)
 {
+    if (hs.available) write_hs();
     signal(onsig, SIG_IGN);
     endwin();
     exit(0);
@@ -196,7 +198,7 @@ menu(int num_items,char **items,char *title,char *query,int num_phrases, char **
     return (inp-'a');
 }
 
-main(int argc, char **argv)
+main(int argc, char **argv, char *envp[])
 {
 #ifdef HAVE_GETOPT_LONG
     struct option  long_options [] = {
@@ -211,10 +213,20 @@ main(int argc, char **argv)
 #endif
     char title[40];
     char *short_options="s:dfchV";
+    char *home;
     int  help_flag = 0;
     int  version_flag = 0;
     int  error_flag = 0;
     int  fast_flag = 1;
+
+    home = getenv("HOME");
+    if (home == NULL) home = getpwuid(getuid())->pw_dir; 
+    (void)strncpy(hs.filename,home,100);
+    (void)strncat(hs.filename,"/.cpat_scores",13);
+
+    hs.available=TRUE;
+    initialise_hs();
+    read_hs();
 
     GameInfo g;
     g.debug = 0;
@@ -309,6 +321,8 @@ main(int argc, char **argv)
 
     while (1)
     {
+	/* g.num_deals=0 so that hs ignores numdeals unless this is set */
+	g.num_deals = 0;
 	snprintf(title,40,"Welcome to CPat %s",VERSION);
 	g.game=menu(NUM_GAMES,names,title,"Choose a game:",0,names);
 	switch (g.game) {

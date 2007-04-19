@@ -19,24 +19,27 @@
 
 #if STDC_HEADERS
 #  include <stdlib.h>
+#  include <stdio.h>
 #  include <string.h>
 #elif HAVE_STRINGS_H
 #  include <strings.h>
 #endif /*STDC_HEADERS*/
 
+#if HAVE_UNISTD_H
+#  include <sys/types.h>
+#  include <unistd.h>
+#endif
+
+#if HAVE_PWD_H
+#include <pwd.h>
+#endif
+
 #ifdef HAVE_GETOPT_H
 #include <getopt.h>
 #else
-#include <unistd.h>
 extern char *optarg;
 extern int  optind;
 #endif
-
-/*
-#if HAVE_UNISTD_H
-#  include <unistd.h>
-#endif
-*/
 
 #include <signal.h>
 #include <time.h>
@@ -87,6 +90,9 @@ typedef long time_t;
 #define YUKON		7
 #define STRATEGY	8
 #define NUM_GAMES	9
+
+/* This is the maximum number of variations allowed per game */
+#define MAX_VARIATIONS	4
 
 /* This produces white space */
 #define NOCARD		(-1)
@@ -180,6 +186,7 @@ typedef struct {
     int foun_start;
     int allow_undo;
     int difficulty;
+    int variation; /* records what variation of the game is being played */
 
     /* To notify draw_piles() which columns to draw */
     int print_col[MAX_NUM_COLS]; 
@@ -189,9 +196,23 @@ typedef struct {
 
     int debug;
 } GameInfo;
+
+typedef struct {
+    int total_games[NUM_GAMES][MAX_VARIATIONS];
+    int finished_games[NUM_GAMES][MAX_VARIATIONS];
+    int lowest_moves[NUM_GAMES][MAX_VARIATIONS];
+    int lowest_deals[NUM_GAMES][MAX_VARIATIONS];
+    time_t date_first_game[NUM_GAMES][MAX_VARIATIONS];
+    time_t date_recent_game[NUM_GAMES][MAX_VARIATIONS];
+    time_t date_best_game[NUM_GAMES][MAX_VARIATIONS];
+    char filename[100];
+    bool available;
+} HighScores;
     
 struct timespec pauselength;
 struct timespec pauseleft;
+
+HighScores hs;
 
 /* This is the background color of the boards */
 static chtype boardbkgd = ' ' | COLOR_PAIR(SPADES_COLOR);

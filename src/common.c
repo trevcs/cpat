@@ -149,9 +149,20 @@ void
 init_deck(GameInfo* g)
 {
     int i,j,numswaps,swapnum,temp;
+    time_t now;
 
     /* Clean up all the undo levels */
     clear_undo(g);
+
+    /* Increment number of games started in the hs */
+    if (hs.available) 
+    {
+	hs.total_games[g->game][g->variation]++;
+	now = time ( NULL );
+	hs.date_recent_game[g->game][g->variation]=now;
+	if (hs.date_first_game[g->game][g->variation]==-1)
+	    hs.date_first_game[g->game][g->variation]=now;
+    }
 
     /* create deck */
     for (i=0; i < PACK_SIZE; i++)
@@ -466,6 +477,7 @@ int
 game_finished(GameInfo* g,char* game_str)
 {
     int num_items=4;
+    time_t now;
     char *items[4] = {"return to main menu","restart with the same seed",
 	"restart with a new seed","continue playing"};
     char *phrases[2] = {(g->finished_foundations==g->num_foun)
@@ -473,6 +485,33 @@ game_finished(GameInfo* g,char* game_str)
 	    : "A bit hard for you was it??",game_str};
 
     kill_windows(g);
+
+    /* Increment number of games finished in the hs */
+    if (g->finished_foundations==g->num_foun && hs.available)
+    {
+	now = time ( NULL );
+       	hs.finished_games[g->game][g->variation]++;
+	if (g->num_deals)
+	{
+	    if (g->deals<hs.lowest_deals[g->game][g->variation] || hs.lowest_deals[g->game][g->variation]==-1)
+	    {
+		hs.lowest_deals[g->game][g->variation]=g->deals;
+		hs.lowest_moves[g->game][g->variation]=g->moves;
+		hs.date_best_game[g->game][g->variation]=now;
+	    }
+	    else if (g->deals==hs.lowest_deals[g->game][g->variation] && g->moves<hs.lowest_moves[g->game][g->variation])
+	    {
+		hs.lowest_moves[g->game][g->variation]=g->moves;
+		hs.date_best_game[g->game][g->variation]=now;
+	    }
+	}
+	else if (g->moves<hs.lowest_moves[g->game][g->variation] || hs.lowest_moves[g->game][g->variation]==-1)
+	{
+	    hs.lowest_moves[g->game][g->variation]=g->moves;
+	    hs.date_best_game[g->game][g->variation]=now;
+	}
+    }
+
     switch(menu(num_items-((g->finished_foundations==g->num_foun)?1:0),items,names[g->game],"Choose an option:",2,phrases)) 
     {
 	case 0:	
@@ -878,7 +917,7 @@ undo_move(GameInfo* g)
 		g->print_col[g->undo->dst]=1;
 		g->undo=pop_items(g->undo);
 	    }
-	    g->deals++;
+	    g->deals--;
 	    draw_piles(g->free,g);
     	    draw_piles(g->main,g);
 	    return;
@@ -1295,6 +1334,19 @@ dump_vars(GameInfo* g)
     wclear(g->main);
     wmove(g->main,2,0);
     wprintw(g->main," game: %d\n",g->game);
+    wprintw(g->main," filename: %s\n",hs.filename);
+    wprintw(g->main," hs.total_games: %d\n",
+	    hs.total_games[g->game][g->variation]);
+    wprintw(g->main," hs.finished_games: %d\n",
+	    hs.finished_games[g->game][g->variation]);
+    wprintw(g->main," hs.lowest_moves: %d\n",
+	    hs.lowest_moves[g->game][g->variation]);
+    wprintw(g->main," hs.lowest_deals: %d\n",
+	    hs.lowest_deals[g->game][g->variation]);
+    wprintw(g->main," hs.date_first_game: %d\n",
+	    hs.date_first_game[g->game][g->variation]);
+    wprintw(g->main," hs.date_best_game: %d\n",
+	    hs.date_best_game[g->game][g->variation]);
     wprintw(g->main," col_size: ");
     for (i=0;i<g->num_cols;i++)
 	wprintw(g->main,"%d ",g->col_size[i]);
