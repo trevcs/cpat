@@ -26,7 +26,7 @@ static int init_vars(GameInfo* g)
 
     snprintf(title,40,"Welcome to %s",names[g->game]);
 
-    g->variation=menu(num_items,items,title,"Choose normal or easy:",0,items);
+    g->variation=menu(title,num_items,items,"Choose normal or easy:",0,items," ",0,items);
     switch(g->variation) 
     {
 	case 0:	
