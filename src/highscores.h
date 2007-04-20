@@ -13,10 +13,10 @@
 #ifndef CPAT_DOCUMENT_H
 #define CPAT_DOCUMENT_H 1
 
-void rules(GameInfo* g);
-void help(void);
-void license(void);
-void credits(void);
+int write_hs(void);
+void initialise_hs(void);
+void read_hs(void);
+void game_stats(int type);
 
 #endif /* !CPAT_DOCUMENT_H */
 /* document.h ends here */

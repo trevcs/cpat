@@ -27,9 +27,9 @@ static int init_vars(GameInfo* g)
 
     snprintf(title,40,"Welcome to %s",names[g->game]);
 
-    g->difficulty=menu(num_items,items,title,"Choose normal or hard:",0,items);
+    g->variation=menu(title,num_items,items,"Choose normal or hard:",0,items," ",0,items);
 
-    if (g->difficulty == 2) return 1;
+    if (g->variation == 2) return 1;
 
     g->num_cols=8;
     g->num_foun=4;
@@ -168,7 +168,7 @@ static void play(GameInfo* g)
 	else if (dst < g->num_cols) 
 	{
 	    /* turn card already on that column face down. */
-	    if (g->difficulty==1 && g->col_size[dst]>=0)
+	    if (g->variation==1 && g->col_size[dst]>=0)
 	    	    g->cols[dst][g->col_size[dst]]-=FACE_DOWN;
 	}
 	else if (dst<g->num_cols+g->num_free)

@@ -15,13 +15,11 @@
 
 /* Prints the help text for the current game */
 void 
-help(GameInfo* g)
+rules(GameInfo* g)
 {
     switch(g->game) {
 	case FCELL:	
-	    wp("\
-FreeCell Rules:\n\
-\n\
+	    pager("FreeCell Rules","\
 To begin the pack is dealt face up into 8 columns. \
 There are also 4 vacant spaces (free cells) and 4 foundation piles. \
 The objective is to get all the cards onto the foundations.\n\
@@ -61,12 +59,10 @@ number of cards to move in the command e.g. '3dc' moves three cards from \
 column 'd' to column 'c' (if there are enough freecells available). \n\
 \n\
 That's it. Enjoy!!\
-",g);
+");
 	    break;
     case KLOND:
-       	wp("\
-Klondike Rules:\n\
-\n\
+       	pager("Klondike Rules","\
 To begin 28 cards are dealt face down into 7 columns with 7 cards in \
 the first column, \
 6 cards in the next, 5 in the next and so on down to 1. The bottom card in \
@@ -103,12 +99,10 @@ Cpat will figure out how many cards to move by checking what \
 card is on the top of the destination pile.\n\
 \n\
 That's it. Enjoy!!\
-",g);
+");
 	    break;
     case SPIDER:
-       	wp("\
-Spider Rules:\n\
-\n\
+       	pager("Spider Rules","\
 Two decks of cards are used in this game. To begin 54 cards are dealt face \
 down in 10 columns (6 cards in each of the first 4 columns and 5 for the \
 rest). The bottom card in each column is turned face up. \n\
@@ -144,12 +138,10 @@ number of cards to move in the command e.g. 3dc moves three cards from \
 column 'd' to column 'c'. \n\
 \n\
 That's it. Enjoy!!\
-",g);
+");
 	    break;
     case FORTYTH:
-       	wp("\
-40 Thieves Rules:\n\
-\n\
+       	pager("40 Thieves Rules","\
 Two decks of cards are used in this game. To begin 10 columns of 4 cards \
 each are dealt face up (the 40 Thieves).\n\
 \n\
@@ -179,12 +171,10 @@ first letter in the move command e.g. 'op' moves the top card from the \
 waste to the appropriate foundation.\n\
 \n\
 That's it. Enjoy!!\
-",g);
+");
 	    break;
     case BAKERSD:
-       	wp("\
-Baker's Dozen Rules:\n\
-\n\
+       	pager("Baker's Dozen Rules","\
 To begin, a single deck of 52 cards is dealt face up into 13 columns. \
 Each column will contain 4 cards. During the deal, Kings are moved to the \
 bottom of the column they are dealt to.\n\
@@ -206,12 +196,10 @@ the '?' key in the main game window). The are no specific instructions for \
 Baker's Dozen.\n\
 \n\
 That's it. Enjoy!!\
-",g);
+");
 	    break;
     case SCORP:
-       	wp("\
-Scorpion Rules:\n\
-\n\
+       	pager("Scorpion Rules","\
 To begin, using a single deck of 52 cards, 7 cards are dealt into 7 \
 columns. All cards are face up except for the bottom three cards on \
 each of the first three columns. The three remaining cards are left \
@@ -251,12 +239,10 @@ the number of cards to move needs to be specified.\n\
 To deal the remaining 3 cards, use the 'oo' command.\n\
 \n\
 That's it. Enjoy!!\
-",g);
+");
 	    break;
     case PENGUIN:
-       	wp("\
-Penguin Rules:\n\
-\n\
+       	pager("Penguin Rules","\
 To begin, a single deck of 52 cards is dealt face up into 7 \
 columns, each containing 7 cards. The first card that is dealt is known \
 as the beak, and when the (3) other cards of the same rank turn up, they \
@@ -296,12 +282,10 @@ the card is in by including a number between 1 and 7. If only one cell \
 is occupied, this number can be left out.\n\
 \n\
 That's it. Enjoy!!\
-",g);
+");
 	    break;
     case YUKON:
-       	wp("\
-Yukon Rules:\n\
-\n\
+       	pager("Yukon Rules","\
 To begin, using a single deck of 52 cards, 28 cards are dealt face down \
 into 7 columns with 7 cards in the first column, \
 6 cards in the next, 5 in the next and so on down to 1. The bottom card in \
@@ -330,12 +314,10 @@ the '?' key in the main game window). The are no specific instructions for \
 Yukon.\n\
 \n\
 That's it. Enjoy!!\
-",g);
+");
 	break;
     case STRATEGY:
-       	wp("\
-Strategy Rules:\n\
-\n\
+       	pager("Strategy Rules","\
 To begin, the Aces are removed from a single deck of 52 cards and placed \
 on the foundations. The game is played in two parts, first cards are dealt \
 from the deck onto any of the four tableau columns, irrespective of suit or \
@@ -360,16 +342,16 @@ requested column twice or by preceding that letter with an 'o' \
 (i.e. 'cc' and 'oc' perform the same action).\n\
 \n\
 That's it. Enjoy!!\
-",g);
+");
 	break;
     }
 }
 
 /* Prints the movement help text */
 void 
-movehelp(GameInfo* g)
+help()
 {
-    wp("\
+    pager("Help","\
 CPat - a curses-based solitaire suite\n\
 \n\
 In Game Options\n\
@@ -444,14 +426,15 @@ board using the two free spaces on the right of the column. There is \
 enough room here to display all cards except the '10' which is depicted \
 with a '0', e.g. the ten of clubs will be '0C'. If the column carries on \
 beyond the top of the screen, then you're out of luck!!.\
-",g);
+");
 }
 
 /* Prints license info */
 void 
-license(GameInfo* g)
+//license(GameInfo* g)
+license()
 {
-    wp("\
+    pager("License","\
 CPat - a curses-based solitaire game\n\
 \n\
 Copyright (C) 2006 Trevor Carey-Smith\n\
@@ -469,12 +452,12 @@ You should have received a copy of the GNU General Public License \
 along with this program (the COPYING file); if not, write to the \
 Free Software Foundation, Inc., 59 Temple Place, Suite 330, \
 Boston, MA  02111-1307  USA\
-",g);
+");
 }
 
 /* prints credits */
 void 
-credits(GameInfo* g)
+credits()
 {
     /*
     FILE *f;
@@ -483,7 +466,7 @@ credits(GameInfo* g)
     write_text(f,g);
     fclose(f);
     */
-    wp("\
+    pager("Credits","\
 CPat - a curses-based solitaire game\n\
 \n\
 The basic idea and bare bones for this code come from a card game \
@@ -493,7 +476,7 @@ See: http://www.catb.org/~esr/bluemoon/\n\
 This implementation was written by Trevor Carey-Smith <trev@highwater.co.nz>\n\
 \n\
 Some of the text for the game's rules was taken from \
-wikipedia: http://wikipedia.org/wiki/List_of_solitaire_card_games",g);
+wikipedia: http://wikipedia.org/wiki/List_of_solitaire_card_games");
 }
 
 /* document.c ends here */

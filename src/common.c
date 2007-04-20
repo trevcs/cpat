@@ -498,21 +498,24 @@ game_finished(GameInfo* g,char* game_str)
 		hs.lowest_deals[g->game][g->variation]=g->deals;
 		hs.lowest_moves[g->game][g->variation]=g->moves;
 		hs.date_best_game[g->game][g->variation]=now;
+		hs.seed[g->game][g->variation]=g->seed;
 	    }
 	    else if (g->deals==hs.lowest_deals[g->game][g->variation] && g->moves<hs.lowest_moves[g->game][g->variation])
 	    {
 		hs.lowest_moves[g->game][g->variation]=g->moves;
 		hs.date_best_game[g->game][g->variation]=now;
+		hs.seed[g->game][g->variation]=g->seed;
 	    }
 	}
 	else if (g->moves<hs.lowest_moves[g->game][g->variation] || hs.lowest_moves[g->game][g->variation]==-1)
 	{
 	    hs.lowest_moves[g->game][g->variation]=g->moves;
 	    hs.date_best_game[g->game][g->variation]=now;
+	    hs.seed[g->game][g->variation]=g->seed;
 	}
     }
 
-    switch(menu(num_items-((g->finished_foundations==g->num_foun)?1:0),items,names[g->game],"Choose an option:",2,phrases)) 
+    switch(menu(names[g->game],num_items-((g->finished_foundations==g->num_foun)?1:0),items,"Choose an option:",0,items," ",2,phrases)) 
     {
 	case 0:	
 	    return 0;
@@ -1019,24 +1022,41 @@ grab_input(GameInfo* g, int* src, int* dst, int* number)
     		return(0);
     	    case 'w':
     		*src=NOCARD;
-    		license(g);	/* Display license */
+    		kill_windows(g);
+    		license();	/* Display license */
+    		if (create_windows(g)) return;
+    		draw_screen(g);
     		return(0);
     	    case 't':
     		*src=NOCARD;
-    		credits(g);	/* Display credits */
+    		kill_windows(g);
+    		credits();	/* Display credits */
+    		if (create_windows(g)) return;
+    		draw_screen(g);
     		return(0);
     	    case 'r':
     		*src=NOCARD;
-    		help(g);	/* Display help */
+    		kill_windows(g);
+    		rules(g);	/* Display games rules */
+    		if (create_windows(g)) return;
+    		draw_screen(g);
     		return(0);
     	    case '?':
     		*src=NOCARD;
-    		movehelp(g);	/* Display move help */
+    		kill_windows(g);
+    		help();	/* Display general help */
+    		if (create_windows(g)) return;
+    		draw_screen(g);
     		return(0);
     	    case 'z':
     		*src=NOCARD;
     		if (g->debug)
-    		    dump_vars(g);	
+		{
+		    kill_windows(g);
+		    dump_vars(g);	
+		    if (create_windows(g)) return;
+		    draw_screen(g);
+		}
     		return(0);
 //    	    case 'x':
 //    		die(0);
@@ -1328,51 +1348,76 @@ write_text(FILE* f,GameInfo* g)
 void 
 dump_vars(GameInfo* g)
 {
-    char inp;
+    char string[50*200]; /* this will contain the text*/
+    char temp[200];
     int i;
 
-    wclear(g->main);
-    wmove(g->main,2,0);
-    wprintw(g->main," game: %d\n",g->game);
-    wprintw(g->main," filename: %s\n",hs.filename);
-    wprintw(g->main," hs.total_games: %d\n",
-	    hs.total_games[g->game][g->variation]);
-    wprintw(g->main," hs.finished_games: %d\n",
+    snprintf(string,200,"game: %d - %s\n",g->game,names[g->game]);
+    snprintf(temp,200,"variation: %d - %s\n",g->variation,variations[g->game][g->variation]);
+    strncat(string,temp,200);
+    snprintf(temp,200,"hs.filename: %s\n",hs.filename);
+    strncat(string,temp,200);
+    snprintf(temp,200,"hs.available: %d\n",hs.available);
+    strncat(string,temp,200);
+    snprintf(temp,200,"hs.total_games: %d\n",hs.total_games[g->game][g->variation]);
+    strncat(string,temp,200);
+    snprintf(temp,200,"hs.finished_games: %d\n",
 	    hs.finished_games[g->game][g->variation]);
-    wprintw(g->main," hs.lowest_moves: %d\n",
+    strncat(string,temp,200);
+    snprintf(temp,200,"hs.lowest_moves: %d\n",
 	    hs.lowest_moves[g->game][g->variation]);
-    wprintw(g->main," hs.lowest_deals: %d\n",
+    strncat(string,temp,200);
+    snprintf(temp,200,"hs.lowest_deals: %d\n",
 	    hs.lowest_deals[g->game][g->variation]);
-    wprintw(g->main," hs.date_first_game: %d\n",
+    strncat(string,temp,200);
+    snprintf(temp,200,"hs.date_first_game: %d\n",
 	    hs.date_first_game[g->game][g->variation]);
-    wprintw(g->main," hs.date_best_game: %d\n",
+    strncat(string,temp,200);
+    snprintf(temp,200,"hs.date_best_game: %d\n",
 	    hs.date_best_game[g->game][g->variation]);
-    wprintw(g->main," col_size: ");
+    strncat(string,temp,200);
+    snprintf(temp,200,"hs.seed: %d\n",
+	    hs.seed[g->game][g->variation]);
+    strncat(string,temp,200);
+    snprintf(temp,200,"col_size: ");
+    strncat(string,temp,200);
     for (i=0;i<g->num_cols;i++)
-	wprintw(g->main,"%d ",g->col_size[i]);
-    wprintw(g->main,"\n face_up: %d  face_down: %d\n",g->face_up,g->face_down);
-    wprintw(g->main," foun_size: ");
+    {
+	snprintf(temp,200,"%d ",g->col_size[i]);
+	strncat(string,temp,200);
+    }
+    snprintf(temp,200,"\nface_up: %d  face_down: %d\n",g->face_up,g->face_down);
+    strncat(string,temp,200);
+    snprintf(temp,200,"foun_size: ");
+    strncat(string,temp,200);
     for (i=0;i<g->num_foun;i++)
-	wprintw(g->main,"%d ",g->foun_size[i]);
-    wprintw(g->main,"\n finished_foundations: %d\n",g->finished_foundations);
-    wprintw(g->main," deals: %d  moves: %d\n",g->deals,g->moves);
-    wprintw(g->main," seed: %d\n",g->seed);
+    {
+	snprintf(temp,200,"%d ",g->foun_size[i]);
+	strncat(string,temp,200);
+    }
+    snprintf(temp,200,"\nfinished_foundations: %d\n",g->finished_foundations);
+    strncat(string,temp,200);
+    snprintf(temp,200,"deals: %d  moves: %d\n",g->deals,g->moves);
+    strncat(string,temp,200);
+    snprintf(temp,200,"seed: %d\n",g->seed);
+    strncat(string,temp,200);
     if (g->undo == NULL) 
-       	wprintw(g->main," undo: There are no undo's yet\n");
+    {
+    	snprintf(temp,200,"undo: There are no undo's yet\n");
+       	strncat(string,temp,200);
+    }
     else 
     {
-       	wprintw(g->main," undo - number: %d\n",g->undo->number);
-	wprintw(g->main," undo - src: %d\n",g->undo->src);
-	wprintw(g->main," undo - dst: %d\n",g->undo->dst);
-	wprintw(g->main," undo - type: %d\n",g->undo->type);
+       	snprintf(temp,200,"undo - number: %d\n",g->undo->number);
+       	strncat(string,temp,200);
+	snprintf(temp,200,"undo - src: %d\n",g->undo->src);
+       	strncat(string,temp,200);
+	snprintf(temp,200,"undo - dst: %d\n",g->undo->dst);
+       	strncat(string,temp,200);
+	snprintf(temp,200,"undo - type: %d\n",g->undo->type);
+       	strncat(string,temp,200);
     }
-    
-    waddstr(g->main,"\n Press a key to continue... ");
 
-    box(g->main, 0, 0);
-
-    inp = wgetch(g->main);
-
-    draw_screen(g);
+    pager("Debug Output",string);
 }
 /* common.c ends here */

@@ -205,6 +205,7 @@ typedef struct {
     time_t date_first_game[NUM_GAMES][MAX_VARIATIONS];
     time_t date_recent_game[NUM_GAMES][MAX_VARIATIONS];
     time_t date_best_game[NUM_GAMES][MAX_VARIATIONS];
+    int seed[NUM_GAMES][MAX_VARIATIONS];
     char filename[100];
     bool available;
 } HighScores;
@@ -222,10 +223,27 @@ static char *names[NUM_GAMES] =
     {"FreeCell","Klondike","Spider","40 Thieves","Baker's Dozen","Scorpion",
     "Penguin","Yukon","Strategy"};
 
+/* Game variations */
+static char *variations[NUM_GAMES][MAX_VARIATIONS] =
+    {
+	{"4 freecells","5 freecells","3 freecells",""},
+	{"3 cards/deal","1 card/deal","",""},
+	{"","","",""},
+	{"","","",""},
+	{"","","",""},
+	{"","","",""},
+	{"","","",""},
+	{"","","",""},
+	{"easy","hard","",""}
+    };
+
 undo_node *pop_items(undo_node *stackTop);
 undo_node *push_items(undo_node *stackTop,int src,int dst,int number,int type);
 void clear_undo(GameInfo* g);
-int menu(int num_items,char **items,char *title,char *query,int num_phrases, char **phrases);
+
+int pager(char *title,char* text);
+int menu(char *title,int num_items,char **items,char *query,int num_items2,
+	char **items2,char *query2,int num_phrases, char **phrases);
 
 void freecell(GameInfo* g);
 void klondike(GameInfo* g);
