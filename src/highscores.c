@@ -140,19 +140,29 @@ read_hs(void)
 void 
 game_stats(int type)
 {
-    char string[NUM_GAMES*MAX_VARIATIONS*200]; /* this will contain the scores*/
+//    char string[NUM_GAMES*MAX_VARIATIONS*200]; /* this will contain the scores*/
+    char *string;
+    char *header[2];
     char temp[200];
     char name_dashes[30],var_dashes[30];
     char time1[11],time2[11];
     int name_len=0;
+    int num_lines=0;
     int variation_len=0;
+    int line_len;
     int i,j;
+    int firsttime=0;
 
     for (i=0;i<NUM_GAMES;i++)
     {
 	for (j=0;j<MAX_VARIATIONS;j++)
+	{
+	    if ((type==0 && hs.total_games[i][j]>0) || 
+		    (type==1 && hs.finished_games[i][j]>0))
+		num_lines++;
 	    if (strlen(variations[i][j])>variation_len)
 		variation_len=strlen(variations[i][j]);
+	}
 	if (strlen(names[i])>name_len)
 	    name_len=strlen(names[i]);
     }
@@ -162,34 +172,42 @@ game_stats(int type)
     name_dashes[name_len]='\0';
     var_dashes[variation_len]='\0';
 
+    line_len=name_len+variation_len+40;
+    
+    header[0] = (char *)malloc (line_len);
+    header[1] = (char *)malloc (line_len);
     if (type==0)
     {
-      	snprintf(string,200,"%-*s %-*s %-4s %-4s %-10s %-11s\n",
+      	snprintf(header[0],200,"%-*s %-*s %-4s %-4s %-10s %-11s",
     		name_len,"Game",variation_len,"Variation",
     		"Trys","Wins","First Game","Latest Game");
-       	snprintf(temp,200,"%-*s %-*s %-4s %-4s %-10s %-11s\n",
+       	snprintf(header[1],200,"%-*s %-*s %-4s %-4s %-10s %-11s",
     		name_len,name_dashes,variation_len,var_dashes,
     		"----","----","----------","-----------");
     }
     else
     {
-    	snprintf(string,200,"%-*s %-*s %-5s %-5s %-10s %-10s\n",
+    	snprintf(header[0],200,"%-*s %-*s %-5s %-5s %-10s %-10s",
     		name_len,"Game",variation_len,"Variation",
     		"Moves","Deals","Date","Seed");
-       	snprintf(temp,200,"%-*s %-*s %-5s %5s %-10s %-10s\n",
+       	snprintf(header[1],200,"%-*s %-*s %-5s %5s %-10s %-10s",
     		name_len,name_dashes,variation_len,var_dashes,
     		"-----", "-----", "----------", "----------");
     }
-    strncat(string,temp,200);
+    
+    string = (char *)malloc ((strlen(header[0])+1)*num_lines);
+
+    snprintf(string,200,"");
     for (i=0;i<NUM_GAMES;i++)
     {
 	for (j=0;j<MAX_VARIATIONS;j++)
 	{
 	    if (type==0 && hs.total_games[i][j]>0)
 	    {
+		if (firsttime++) strncat(string,"\n",1);
 		strftime(time1,11,"%F",localtime(&hs.date_first_game[i][j]));
 		strftime(time2,11,"%F",localtime(&hs.date_recent_game[i][j]));
-	       	snprintf(temp,200,"%-*s %-*s %4d %4d %10s %11s\n",
+	       	snprintf(temp,200,"%-*s %-*s %4d %4d %10s %11s",
 			name_len,names[i],
 			variation_len,variations[i][j],
 	    		hs.total_games[i][j],
@@ -199,8 +217,9 @@ game_stats(int type)
 	    }
 	    else if (type==1 && hs.finished_games[i][j]>0)
 	    {
+		if (firsttime++) strncat(string,"\n",1);
 		strftime(time1,11,"%F",localtime(&hs.date_best_game[i][j]));
-	       	snprintf(temp,200,"%-*s %-*s %5d %5d %10s %10d\n",
+	       	snprintf(temp,200,"%-*s %-*s %5d %5d %10s %10d",
 			name_len,names[i],
 			variation_len,variations[i][j],
 	    		hs.lowest_moves[i][j],
@@ -212,7 +231,10 @@ game_stats(int type)
     }
 
     /* Print highscore table for all games */
-    pager(type==0?"Game Statistics":"High Scores",string);
+    pager(type==0?"Game Statistics":"High Scores",string,2,header);
+    free(header[0]);
+    free(header[1]);
+    free(string);
 }
 
 /* highscores.c ends here */

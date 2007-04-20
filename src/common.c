@@ -1418,6 +1418,6 @@ dump_vars(GameInfo* g)
        	strncat(string,temp,200);
     }
 
-    pager("Debug Output",string);
+    pager("Debug Output",string,0,NULL);
 }
 /* common.c ends here */

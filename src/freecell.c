@@ -24,27 +24,16 @@ init_vars(GameInfo* g)
 
     int num_items=4;
     char title[40];
-    char *items[4] = {"normal (four freecells)","easy (five freecells)",
-	"hard (three freecells)","return to main menu"};
+    char *items[4] = {"hard (three freecells)","normal (four freecells)",
+	"easy (five freecells)","return to main menu"};
 
     snprintf(title,40,"Welcome to %s",names[g->game]);
 
-    g->variation=menu(title,num_items,items,"Choose normal, easy or hard:",0,items," ",0,items);
-    switch(g->variation) 
-    {
-	case 0:	
-	    g->num_free=4;
-	    break;
-	case 1:
-	    g->num_free=5;
-	    break;
-	case 2:
-	    g->num_free=3;
-	    break;
-	case 3:
-	    return 1;
-    }
+    g->variation=menu(title,num_items,items,"Choose hard, normal or easy:",0,items," ",0,items);
 
+    if (g->variation==3) return 1;
+
+    g->num_free=g->variation+3;
     g->num_cols=8;
     g->num_foun=4;
     g->num_packs=1;

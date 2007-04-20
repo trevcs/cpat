@@ -73,12 +73,12 @@ void clear_undo(GameInfo* g)
 
 /* Creates windows to write stuff not in a game */
 int
-pager(char *title,char* text)
+pager(char *title,char* text,int num_phrases, char **phrases)
 {
     WINDOW *main,*input;
     char inp;
     int title_y;
-    int phrases_y;
+    int phrases_y,i;
     int inner_w,inner_h,inner_x,inner_y;
     int outer_w,outer_h,outer_x,outer_y;
 
@@ -92,11 +92,13 @@ pager(char *title,char* text)
     outer_h = LINES-4;
     outer_x = 4;
     outer_y = 2;
+
     inner_w = outer_w-8;
     inner_x = outer_x+(outer_w-inner_w)/2;
-    inner_h = outer_h-5;
-    inner_y=outer_y+4;
+    inner_h = outer_h-5-num_phrases;
+    inner_y=outer_y+4+num_phrases;
     title_y = 2;
+    phrases_y = 4;
 
     main = newwin(outer_h,outer_w,outer_y,outer_x);
 
@@ -107,6 +109,8 @@ pager(char *title,char* text)
     wattron(main,A_UNDERLINE);
     mvwprintw(main,title_y,4,title);
     wattroff(main,A_UNDERLINE);
+    for (i=0;i<num_phrases;i++) 
+	mvwprintw(main,phrases_y+i,4,phrases[i]);
     wrefresh(main);
 
     input = newwin(inner_h,inner_w,inner_y,inner_x);

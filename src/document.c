@@ -59,7 +59,7 @@ number of cards to move in the command e.g. '3dc' moves three cards from \
 column 'd' to column 'c' (if there are enough freecells available). \n\
 \n\
 That's it. Enjoy!!\
-");
+",0,NULL);
 	    break;
     case KLOND:
        	pager("Klondike Rules","\
@@ -99,7 +99,7 @@ Cpat will figure out how many cards to move by checking what \
 card is on the top of the destination pile.\n\
 \n\
 That's it. Enjoy!!\
-");
+",0,NULL);
 	    break;
     case SPIDER:
        	pager("Spider Rules","\
@@ -138,7 +138,7 @@ number of cards to move in the command e.g. 3dc moves three cards from \
 column 'd' to column 'c'. \n\
 \n\
 That's it. Enjoy!!\
-");
+",0,NULL);
 	    break;
     case FORTYTH:
        	pager("40 Thieves Rules","\
@@ -171,7 +171,7 @@ first letter in the move command e.g. 'op' moves the top card from the \
 waste to the appropriate foundation.\n\
 \n\
 That's it. Enjoy!!\
-");
+",0,NULL);
 	    break;
     case BAKERSD:
        	pager("Baker's Dozen Rules","\
@@ -196,7 +196,7 @@ the '?' key in the main game window). The are no specific instructions for \
 Baker's Dozen.\n\
 \n\
 That's it. Enjoy!!\
-");
+",0,NULL);
 	    break;
     case SCORP:
        	pager("Scorpion Rules","\
@@ -239,7 +239,7 @@ the number of cards to move needs to be specified.\n\
 To deal the remaining 3 cards, use the 'oo' command.\n\
 \n\
 That's it. Enjoy!!\
-");
+",0,NULL);
 	    break;
     case PENGUIN:
        	pager("Penguin Rules","\
@@ -282,7 +282,7 @@ the card is in by including a number between 1 and 7. If only one cell \
 is occupied, this number can be left out.\n\
 \n\
 That's it. Enjoy!!\
-");
+",0,NULL);
 	    break;
     case YUKON:
        	pager("Yukon Rules","\
@@ -314,7 +314,7 @@ the '?' key in the main game window). The are no specific instructions for \
 Yukon.\n\
 \n\
 That's it. Enjoy!!\
-");
+",0,NULL);
 	break;
     case STRATEGY:
        	pager("Strategy Rules","\
@@ -342,7 +342,7 @@ requested column twice or by preceding that letter with an 'o' \
 (i.e. 'cc' and 'oc' perform the same action).\n\
 \n\
 That's it. Enjoy!!\
-");
+",0,NULL);
 	break;
     }
 }
@@ -426,7 +426,7 @@ board using the two free spaces on the right of the column. There is \
 enough room here to display all cards except the '10' which is depicted \
 with a '0', e.g. the ten of clubs will be '0C'. If the column carries on \
 beyond the top of the screen, then you're out of luck!!.\
-");
+",0,NULL);
 }
 
 /* Prints license info */
@@ -452,7 +452,7 @@ You should have received a copy of the GNU General Public License \
 along with this program (the COPYING file); if not, write to the \
 Free Software Foundation, Inc., 59 Temple Place, Suite 330, \
 Boston, MA  02111-1307  USA\
-");
+",0,NULL);
 }
 
 /* prints credits */
@@ -476,7 +476,7 @@ See: http://www.catb.org/~esr/bluemoon/\n\
 This implementation was written by Trevor Carey-Smith <trev@highwater.co.nz>\n\
 \n\
 Some of the text for the game's rules was taken from \
-wikipedia: http://wikipedia.org/wiki/List_of_solitaire_card_games");
+wikipedia: http://wikipedia.org/wiki/List_of_solitaire_card_games",0,NULL);
 }
 
 /* document.c ends here */

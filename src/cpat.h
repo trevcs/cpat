@@ -185,7 +185,6 @@ typedef struct {
     int num_deals; /* number of times allowed to deal through deck */
     int foun_start;
     int allow_undo;
-    int difficulty;
     int variation; /* records what variation of the game is being played */
 
     /* To notify draw_piles() which columns to draw */
@@ -226,7 +225,7 @@ static char *names[NUM_GAMES] =
 /* Game variations */
 static char *variations[NUM_GAMES][MAX_VARIATIONS] =
     {
-	{"4 freecells","5 freecells","3 freecells",""},
+	{"3 freecells","4 freecells","5 freecells",""},
 	{"3 cards/deal","1 card/deal","",""},
 	{"","","",""},
 	{"","","",""},
@@ -241,7 +240,7 @@ undo_node *pop_items(undo_node *stackTop);
 undo_node *push_items(undo_node *stackTop,int src,int dst,int number,int type);
 void clear_undo(GameInfo* g);
 
-int pager(char *title,char* text);
+int pager(char *title,char* text,int num_phrases, char **phrases);
 int menu(char *title,int num_items,char **items,char *query,int num_items2,
 	char **items2,char *query2,int num_phrases, char **phrases);
 
