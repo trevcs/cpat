@@ -195,16 +195,20 @@ game_stats(int type)
     		"-----", "-----", "----------", "----------");
     }
     
-    string = (char *)malloc ((strlen(header[0])+1)*num_lines);
+    /* num_lines+1 so that its never 0 */
+    string = (char *)malloc ((strlen(header[0])+1)*(num_lines+1));
 
-    snprintf(string,200,"");
+    snprintf(string,200,"No stats available.");
     for (i=0;i<NUM_GAMES;i++)
     {
 	for (j=0;j<MAX_VARIATIONS;j++)
 	{
 	    if (type==0 && hs.total_games[i][j]>0)
 	    {
-		if (firsttime++) strncat(string,"\n",1);
+		if (firsttime++) 
+		    strncat(string,"\n",1);
+		else 
+		    snprintf(string,200,"");
 		strftime(time1,11,"%F",localtime(&hs.date_first_game[i][j]));
 		strftime(time2,11,"%F",localtime(&hs.date_recent_game[i][j]));
 	       	snprintf(temp,200,"%-*s %-*s %4d %4d %10s %11s",
@@ -217,7 +221,10 @@ game_stats(int type)
 	    }
 	    else if (type==1 && hs.finished_games[i][j]>0)
 	    {
-		if (firsttime++) strncat(string,"\n",1);
+		if (firsttime++) 
+		    strncat(string,"\n",1);
+		else 
+		    snprintf(string,200,"");
 		strftime(time1,11,"%F",localtime(&hs.date_best_game[i][j]));
 	       	snprintf(temp,200,"%-*s %-*s %5d %5d %10s %10d",
 			name_len,names[i],
