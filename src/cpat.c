@@ -436,10 +436,17 @@ main(int argc, char **argv, char *envp[])
 #undef P
     }
 
+    home = getenv("HOME");
+    if (home == NULL) 
+    {
+#if HAVE_PWD_H
+	home = getpwuid(getuid())->pw_dir; 
+#else
+	hs.available=FALSE;
+#endif
+    }
     if (hs.available) 
     {
-      	home = getenv("HOME");
-	if (home == NULL) home = getpwuid(getuid())->pw_dir; 
 	(void)strncpy(hs.filename,home,100);
 	(void)strncat(hs.filename,"/.cpat_scores",13);
 

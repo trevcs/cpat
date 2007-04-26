@@ -204,7 +204,7 @@ void scorpion(GameInfo* g)
 	play(g);
 
 	snprintf(game_str,60,"You did %d card moves and had %d %s left.",
-		g->moves,g->deals,(g->deals==1)?"deal":"deals");
+		g->moves,g->num_deals-g->deals,(g->num_deals-g->deals)==1?"deal":"deals");
 	carry_on=game_finished(g,game_str);
     }
 }
