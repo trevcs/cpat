@@ -477,12 +477,14 @@ int
 game_finished(GameInfo* g,char* game_str)
 {
     int num_items=4;
+    int num_phrases=2;
     time_t now;
     char *items[4] = {"return to main menu","restart with the same seed",
 	"restart with a new seed","continue playing"};
-    char *phrases[2] = {(g->finished_foundations==g->num_foun)
+    char *phrases[3] = {(g->finished_foundations==g->num_foun)
 	    ? "Congratulations, you finished the game."
-	    : "A bit hard for you was it??",game_str};
+	    : "A bit hard for you was it??",game_str,
+		"Well done, you set a new high score!"};
 
     kill_windows(g);
 
@@ -499,12 +501,14 @@ game_finished(GameInfo* g,char* game_str)
 		hs.lowest_moves[g->game][g->variation]=g->moves;
 		hs.date_best_game[g->game][g->variation]=now;
 		hs.seed[g->game][g->variation]=g->seed;
+		num_phrases=3;
 	    }
 	    else if (g->deals==hs.lowest_deals[g->game][g->variation] && g->moves<hs.lowest_moves[g->game][g->variation])
 	    {
 		hs.lowest_moves[g->game][g->variation]=g->moves;
 		hs.date_best_game[g->game][g->variation]=now;
 		hs.seed[g->game][g->variation]=g->seed;
+		num_phrases=3;
 	    }
 	}
 	else if (g->moves<hs.lowest_moves[g->game][g->variation] || hs.lowest_moves[g->game][g->variation]==-1)
@@ -512,10 +516,11 @@ game_finished(GameInfo* g,char* game_str)
 	    hs.lowest_moves[g->game][g->variation]=g->moves;
 	    hs.date_best_game[g->game][g->variation]=now;
 	    hs.seed[g->game][g->variation]=g->seed;
+	    num_phrases=3;
 	}
     }
 
-    switch(menu(names[g->game],num_items-((g->finished_foundations==g->num_foun)?1:0),items,"Choose an option:",0,items," ",2,phrases)) 
+    switch(menu(names[g->game],num_items-((g->finished_foundations==g->num_foun)?1:0),items,"Choose an option:",0,items," ",num_phrases,phrases)) 
     {
 	case 0:	
 	    return 0;
