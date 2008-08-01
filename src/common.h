@@ -37,8 +37,6 @@ void init_board(WINDOW *win,GameInfo* g);
 void draw_screen(GameInfo* g);
 void move_card(int src,int dst,int number,GameInfo* g);
 void show_error(char* error_str,WINDOW* win);
-void wp(char* text,GameInfo* g);
-void write_text(FILE* f,GameInfo* g);
 void dump_vars(GameInfo* g);
 
 

@@ -459,13 +459,6 @@ Boston, MA  02111-1307  USA\
 void 
 credits()
 {
-    /*
-    FILE *f;
-
-    f=fopen("/home/trev/projects/cpat/src/license.txt","r");
-    write_text(f,g);
-    fclose(f);
-    */
     pager("Credits","\
 CPat - a curses-based solitaire game\n\
 \n\

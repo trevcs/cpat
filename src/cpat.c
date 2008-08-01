@@ -76,16 +76,12 @@ int
 pager(char *title,char* text,int num_phrases, char **phrases)
 {
     WINDOW *main,*input;
-    char inp;
-    int title_y;
-    int phrases_y,i;
+    int inp;
+    int i,max_lines,line,wait;
     int inner_w,inner_h,inner_x,inner_y;
     int outer_w,outer_h,outer_x,outer_y;
 
-    int y,maxy,maxx;
-    int page_width;
-    char *start_p,*end_p,*final_p;
-    char dest[200]; /* this will contain each line before we print it */
+    char *char_p,**start_lines,**end_lines;
 
     /* Initial values for outer window */
     outer_w = COLS-8;
@@ -93,12 +89,10 @@ pager(char *title,char* text,int num_phrases, char **phrases)
     outer_x = 4;
     outer_y = 2;
 
-    inner_w = outer_w-8;
-    inner_x = outer_x+(outer_w-inner_w)/2;
+    inner_w = outer_w-7;
+    inner_x = 1+outer_x+(outer_w-inner_w)/2;
     inner_h = outer_h-5-num_phrases;
     inner_y=outer_y+4+num_phrases;
-    title_y = 2;
-    phrases_y = 4;
 
     main = newwin(outer_h,outer_w,outer_y,outer_x);
 
@@ -107,81 +101,143 @@ pager(char *title,char* text,int num_phrases, char **phrases)
     box(main, 0, 0);
 
     wattron(main,A_UNDERLINE);
-    mvwprintw(main,title_y,4,title);
+    mvwprintw(main,2,4,title);
     wattroff(main,A_UNDERLINE);
     for (i=0;i<num_phrases;i++) 
-	mvwprintw(main,phrases_y+i,4,phrases[i]);
+	mvwprintw(main,4+i,4,phrases[i]);
     wrefresh(main);
 
     input = newwin(inner_h,inner_w,inner_y,inner_x);
-    wbkgdset(input, boardbkgd);
-//    wattron(input,A_REVERSE | COLOR_PAIR(BACK_COLOR) | A_BOLD);
-//    wbkgdset(input, COLOR_PAIR(BACK_COLOR) | A_REVERSE | A_BOLD);
-    wclear(input);
-
-    wmove(input,0,0);
-
-    getmaxyx(input,maxy,maxx);
-    page_width = maxx-1;
+    keypad(input,TRUE);
 
     /* points to last character of text */
-    final_p=&text[0]+strlen(text);
+    char_p=&text[0]+strlen(text);
+    start_lines = (char**) malloc (2*sizeof(char *));
+    end_lines = (char**) malloc (sizeof(char *));
 
-    /* will point to last character of current line */
-    end_p = &text[0];
-    /* will point to first character of current line */
-    start_p = &text[0];
-    /* do this for all of text */
-    while (end_p < final_p)
+    i=0;
+    start_lines[0] = &text[0];
+    while (start_lines[0] < char_p)
     {
-	end_p = start_p;
+        end_lines[0]=start_lines[0]-1;
+        /* largest possible start of next line */
+        start_lines[1]=start_lines[0]+inner_w-1;
+    	if (start_lines[1] > char_p) start_lines[1]=char_p;
 
 	/* search from start of current line for newline chr */
-	while (*end_p != '\n' && end_p <= start_p+page_width) end_p++;
+	while (*++end_lines[0] != '\n' && end_lines[0] <= start_lines[1]);
 
 	/* If no newline found */
-	if (end_p == start_p + page_width + 1)
-	{
-	    end_p--;
-    	    if (start_p + page_width >= final_p)
-    		end_p=final_p;
-	    else
-		/* search for the space closest to the end of current line*/
-		while (*end_p != ' ' && end_p>start_p) end_p--;
-	}
+	if (end_lines[0] > start_lines[1])
+            /* search for the space closest to the end of current line*/
+            while (*--end_lines[0] != ' ' && end_lines[0] > start_lines[0]);
 	
-	if (end_p==start_p && *end_p != '\n')
-	{
+	if (end_lines[0]==start_lines[0] && *end_lines[0] != '\n')
 	    /* This means there's no space on the line, we will
 	     * break the long line up */
-	    end_p = start_p + page_width;
-	    (void) strncpy(dest,start_p,(int)(end_p-start_p));
-	    dest[(int)(end_p-start_p)]='\0';
-	    start_p=end_p;
-	}
+	    start_lines[0] = start_lines[1];
 	else
-	{
-	    (void) strncpy(dest,start_p,(int)(end_p-start_p));
-    	    dest[(int)(end_p-start_p)]='\0';
-	    start_p=end_p+1;
-	}
-	wprintw(input,"%s\n",dest);
-
-	getyx(input,y,maxx);
-	/* check if we are at the bottom of the window
-	 * or if this is the last line of the last paragraph */
-	if (y>maxy-3 || (end_p>=final_p))
-	{
-	    getmaxyx(input,maxy,maxx);
-    	    mvwprintw(input,maxy-1,maxx-16,"press a key...");
-//	    box(input,0,0);
-	    wrefresh(input);
-	    wgetch(input);
-	    wclear(input);
-	    wmove(input,0,0);
-	}
+            /* +1 means we don't print space */
+            start_lines[0]=end_lines[0]+1;
+        i++;
     }
+    free(start_lines);
+    free(end_lines);
 
+    start_lines = (char**) malloc (sizeof(char *)*++i);
+    end_lines = (char**) malloc (sizeof(char *)*i);
+    i=0;
+    start_lines[i] = &text[0];
+    while (start_lines[i] < char_p)
+    {
+        end_lines[i]=start_lines[i]-1;
+        /* largest possible start of next line */
+        start_lines[i+1]=start_lines[i]+inner_w-1;
+    	if (start_lines[i+1] > char_p) start_lines[i+1]=char_p;
+
+	/* search from start of current line for newline chr */
+	while (*++end_lines[i] != '\n' && end_lines[i] <= start_lines[i+1]);
+
+    	if (end_lines[i] > char_p) end_lines[i]=char_p;
+	/* If no newline found */
+	if (end_lines[i] > start_lines[i+1])
+            /* search for the space closest to the end of current line*/
+            while (*--end_lines[i] != ' ' && end_lines[i] > start_lines[i]);
+	
+	if (end_lines[i]==start_lines[i] && *end_lines[i] != '\n')
+	    /* This means there's no space on the line, we will
+	     * break the long line up */
+	    end_lines[i] = start_lines[i+1];
+	else
+            /* +1 means we don't print space */
+            start_lines[i+1]=end_lines[i]+1;
+        i++;
+    }
+    max_lines=i-1;
+
+    wbkgdset(input, boardbkgd);
+
+    char_p = (char *) malloc (inner_w);
+    line=0;
+    wait=1;
+    while (wait)
+    {
+        wclear(input);
+        wmove(input,0,0);
+        if (line<0) line=0;
+	if (line>max_lines) break;
+        for (i=line;i<line+inner_h-2;i++) {
+            strncpy(char_p,start_lines[i],(int)(end_lines[i]-start_lines[i]));
+            char_p[(int)(end_lines[i]-start_lines[i])]='\0';
+            wprintw(input,"%s\n",char_p);
+            if (i==max_lines) break;
+        }
+
+        mvwprintw(input,inner_h-1,inner_w-18,"Up/Down PgUp/PgDn");
+        wrefresh(input);
+        wait=2;
+        while (wait==2)
+        {
+            wait=1;
+            inp = wgetch(input);
+            switch (inp)
+            {
+                case KEY_HOME:
+                    line=0;
+                    break;
+                case KEY_END:
+                    line=(line>max_lines-inner_h+3)?line:max_lines-inner_h+3;
+                    break;
+                case KEY_ENTER:
+                case 13:
+                case KEY_DOWN:
+                    line++;
+                    break;
+                case KEY_BACKSPACE:
+                case 127:
+                case KEY_UP:
+                    line--;
+                    break;
+                case KEY_PPAGE:
+                case 'p':
+                    line-=inner_h-2;
+                    break;
+                case ' ':
+                case 'n':
+                case KEY_NPAGE:
+                    line+=inner_h-2;
+                    break;
+                case 'q':
+                    wait=0;
+                    break;
+                default:
+                    wait=2;
+            }
+        }
+    }
+    free(start_lines);
+    free(end_lines);
+    free(char_p);
     /* Now delete windows */
     delwin(input);
     delwin(main);
@@ -467,8 +523,8 @@ main(int argc, char **argv, char *envp[])
     cbreak();
     nonl();
     noecho();
-    intrflush(stdscr,FALSE);
-    keypad(stdscr,TRUE);
+//    intrflush(stdscr,FALSE);
+//    keypad(stdscr,TRUE);
 
     char *items[5] = {"Help","Credits","License","Game Stats","High Scores"};
 
