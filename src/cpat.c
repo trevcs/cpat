@@ -3,7 +3,7 @@
  *                              CPat                                         *
  *                         =================                                 *
  *            A curses based implementation of solitaire                     *
- *            Copyright (C) 2006 Trevor Carey-Smith                          *  
+ *            Copyright (C) 2006 Trevor Carey-Smith                          *
  *                                                                           *
  *          The program outline and some of the basic functions are          *
  *          taken from bluemoon by T. A. Lister and Eric S. Raymond.         *
@@ -110,46 +110,20 @@ pager(char *title,char* text,int num_phrases, char **phrases)
     input = newwin(inner_h,inner_w,inner_y,inner_x);
     keypad(input,TRUE);
 
-    /* points to last character of text */
+    max_lines=inner_h;
+    start_lines = (char**) malloc (sizeof(char *)*max_lines);
+    end_lines = (char**) malloc (sizeof(char *)*max_lines);
+    i=0;
     char_p=&text[0]+strlen(text);
-    start_lines = (char**) malloc (2*sizeof(char *));
-    end_lines = (char**) malloc (sizeof(char *));
-
-    i=0;
-    start_lines[0] = &text[0];
-    while (start_lines[0] < char_p)
-    {
-        end_lines[0]=start_lines[0]-1;
-        /* largest possible start of next line */
-        start_lines[1]=start_lines[0]+inner_w-1;
-    	if (start_lines[1] > char_p) start_lines[1]=char_p;
-
-	/* search from start of current line for newline chr */
-	while (*++end_lines[0] != '\n' && end_lines[0] <= start_lines[1]);
-
-	/* If no newline found */
-	if (end_lines[0] > start_lines[1])
-            /* search for the space closest to the end of current line*/
-            while (*--end_lines[0] != ' ' && end_lines[0] > start_lines[0]);
-	
-	if (end_lines[0]==start_lines[0] && *end_lines[0] != '\n')
-	    /* This means there's no space on the line, we will
-	     * break the long line up */
-	    start_lines[0] = start_lines[1];
-	else
-            /* +1 means we don't print space */
-            start_lines[0]=end_lines[0]+1;
-        i++;
-    }
-    free(start_lines);
-    free(end_lines);
-
-    start_lines = (char**) malloc (sizeof(char *)*++i);
-    end_lines = (char**) malloc (sizeof(char *)*i);
-    i=0;
     start_lines[i] = &text[0];
     while (start_lines[i] < char_p)
     {
+        if (i >= max_lines-1)
+        {
+            max_lines+=inner_h;
+            start_lines = (char**) realloc(start_lines,sizeof(char *)*max_lines);
+            end_lines = (char**) realloc(end_lines,sizeof(char *)*max_lines);
+        }
         end_lines[i]=start_lines[i]-1;
         /* largest possible start of next line */
         start_lines[i+1]=start_lines[i]+inner_w-1;
@@ -211,11 +185,13 @@ pager(char *title,char* text,int num_phrases, char **phrases)
                 case KEY_ENTER:
                 case 13:
                 case KEY_DOWN:
+                case 'j':
                     line++;
                     break;
                 case KEY_BACKSPACE:
                 case 127:
                 case KEY_UP:
+                case 'k':
                     line--;
                     break;
                 case KEY_PPAGE:
@@ -226,6 +202,12 @@ pager(char *title,char* text,int num_phrases, char **phrases)
                 case 'n':
                 case KEY_NPAGE:
                     line+=inner_h-2;
+                    break;
+                case 'u':
+                    line-=(inner_h-2)/2;
+                    break;
+                case 'd':
+                    line+=(inner_h-2)/2;
                     break;
                 case 'q':
                     wait=0;
