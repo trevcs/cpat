@@ -14,8 +14,8 @@
 #define CPAT_COMMON_H 1
 
 static char *ranks[SUIT_LENGTH] =
-	{" A"," 2"," 3"," 4"," 5"," 6"," 7"," 8"," 9","10"," J"," Q"," K"};
-static char suits[] = {'H','S','D','C'};	
+        {" A"," 2"," 3"," 4"," 5"," 6"," 7"," 8"," 9","10"," J"," Q"," K"};
+static char suits[] = {'H','S','D','C'};        
 
 undo_node * push_items(undo_node * stackTop,int src,int dst,int number,int type);
 undo_node * pop_items(undo_node * stackTop);

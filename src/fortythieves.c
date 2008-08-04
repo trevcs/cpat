@@ -36,7 +36,7 @@ init_vars(GameInfo* g)
 
     /* Set initial column lengths */
     for (i=0; i < g->num_cols; i++)
-	g->col_size[i] = 3;
+        g->col_size[i] = 3;
 
     /* create and shuffle deck */
     deal_deck(FACE_UP,g);
@@ -44,12 +44,12 @@ init_vars(GameInfo* g)
     /* Initialise freepile and foundation */
     for (i=0; i < g->num_foun; i++)
     {
-	g->foundation[i]=NOCARD;
-	g->foun_size[i]=0;
+        g->foundation[i]=NOCARD;
+        g->foun_size[i]=0;
     }
 
-    g->freepile[0]=CARDBACK;	/* This is the back of the deck to deal */
-    g->freepile[1]=NOCARD;	/* No card has been delt yet */
+    g->freepile[0]=CARDBACK;    /* This is the back of the deck to deal */
+    g->freepile[1]=NOCARD;      /* No card has been delt yet */
 
     /* No moves yet!! */
     g->moves=0;
@@ -69,87 +69,87 @@ play(GameInfo* g)
     while (g->finished_foundations < g->num_foun)
     {
 
-	/* This is for if we moved a card off the waste, we need
-	 * to turn over the card underneath */
-	turnover_waste(g);
+        /* This is for if we moved a card off the waste, we need
+         * to turn over the card underneath */
+        turnover_waste(g);
 
-	if (grab_input(g,&src, &dst, &number))
-	    break;  /* quit game */
+        if (grab_input(g,&src, &dst, &number))
+            break;  /* quit game */
 
-	if (src<=NOCARD) 
-	    continue;
-	else if (src < g->num_cols)
-	{
-	    /* Can't move multiple cards to normal columns*/
-	    /* and we want to move at least one card */
-	    if (dst<g->num_cols || number==0) number=1; 
+        if (src<=NOCARD) 
+            continue;
+        else if (src < g->num_cols)
+        {
+            /* Can't move multiple cards to normal columns*/
+            /* and we want to move at least one card */
+            if (dst<g->num_cols || number==0) number=1; 
 
-	    /* Check if stack to move is big enough and in suit order */
-	    if (check_sequence(number,src,ASC,IN_SUIT,NO_WRAP,g))
-		    continue;
+            /* Check if stack to move is big enough and in suit order */
+            if (check_sequence(number,src,ASC,IN_SUIT,NO_WRAP,g))
+                    continue;
 
-	    card=g->cols[src][g->col_size[src]];
-	}
-	else if (src < g->num_cols+g->num_free)
-	{
-	    /* this is turning deck cards over */
-	    if (dst==g->num_cols || dst==NOCARD)
-	    {
-		roll_deckcards(g);
-		continue;
-	    }
-	    /* this is for moving a card off the face up deck */
-	    else
-	    {
-	 	src=g->num_cols+1;
-		if (g->freepile[1] == NOCARD)
-		{
-		    show_error("No cards on that pile.",g->input);
-    		    continue;
-    		}
-    		card=g->freepile[1];
-	    }
-	    number=1; /* don't interfere with multi moves */
-	}
-	/* Move cards automatically to the foundations */
-	else if (src>=g->num_cols+g->num_free)
-	{
-	    if (dst!=NOCARD)
-       		show_error("Can't move cards off the foundations.",g->input);
-	    else
-		foundation_automove(number==0?1:number,g);
-	    continue;	/* Goto next move */
-	}
+            card=g->cols[src][g->col_size[src]];
+        }
+        else if (src < g->num_cols+g->num_free)
+        {
+            /* this is turning deck cards over */
+            if (dst==g->num_cols || dst==NOCARD)
+            {
+                roll_deckcards(g);
+                continue;
+            }
+            /* this is for moving a card off the face up deck */
+            else
+            {
+                src=g->num_cols+1;
+                if (g->freepile[1] == NOCARD)
+                {
+                    show_error("No cards on that pile.",g->input);
+                    continue;
+                }
+                card=g->freepile[1];
+            }
+            number=1; /* don't interfere with multi moves */
+        }
+        /* Move cards automatically to the foundations */
+        else if (src>=g->num_cols+g->num_free)
+        {
+            if (dst!=NOCARD)
+                show_error("Can't move cards off the foundations.",g->input);
+            else
+                foundation_automove(number==0?1:number,g);
+            continue;   /* Goto next move */
+        }
 
-	if (dst==NOCARD)
-	    continue;
-    	/* Next check if card can move there */
-	else if (dst < g->num_cols) 
-	{
-	    /* Allowed to move any card to vacant pile */
-	    if (g->col_size[dst] >= 0)
-		if (check_move(dst,card,DESC,IN_SUIT,NO_WRAP,g))
-		    continue;
-	}
-	/* Can't move card to waste */
-	else if (dst<g->num_cols+g->num_free)
-	{
-	    show_error("You can't move cards there.",g->input);
-	    continue;
-	}
-	/* and for foundation */
-	else if (dst >= g->num_cols+g->num_free)
-	{
-	    if (check_move(dst,card,0,0,NO_WRAP,g))
-		continue;
-	}
+        if (dst==NOCARD)
+            continue;
+        /* Next check if card can move there */
+        else if (dst < g->num_cols) 
+        {
+            /* Allowed to move any card to vacant pile */
+            if (g->col_size[dst] >= 0)
+                if (check_move(dst,card,DESC,IN_SUIT,NO_WRAP,g))
+                    continue;
+        }
+        /* Can't move card to waste */
+        else if (dst<g->num_cols+g->num_free)
+        {
+            show_error("You can't move cards there.",g->input);
+            continue;
+        }
+        /* and for foundation */
+        else if (dst >= g->num_cols+g->num_free)
+        {
+            if (check_move(dst,card,0,0,NO_WRAP,g))
+                continue;
+        }
 
-    	/* now do move(s) */
-	for (j=0;j<number;j++)
-	{
-	    if (j) nanosleep(&pauselength,&pauseleft);
-	    move_card(src,dst,1,g);
-	}
+        /* now do move(s) */
+        for (j=0;j<number;j++)
+        {
+            if (j) nanosleep(&pauselength,&pauseleft);
+            move_card(src,dst,1,g);
+        }
 
     }
 }
@@ -163,13 +163,13 @@ fortythieves(GameInfo* g)
 
     while (carry_on)
     {
-	if (carry_on==2) init_vars(g);
-	if (create_windows(g)) return;
-	draw_screen(g);
-	play(g);
+        if (carry_on==2) init_vars(g);
+        if (create_windows(g)) return;
+        draw_screen(g);
+        play(g);
 
-	snprintf(game_str,50,"You did %d card moves.",g->moves);
-	carry_on=game_finished(g,game_str);
+        snprintf(game_str,50,"You did %d card moves.",g->moves);
+        carry_on=game_finished(g,game_str);
     }
 }
 /* fortythieves.c ends here */

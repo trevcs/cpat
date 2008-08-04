@@ -67,7 +67,7 @@ struct timespec {
 #  if HAVE_USLEEP
 #    define nanosleep(req,rem)    ((void) usleep (*req.tv_nsec/1000))
 #  else
-#    define nanosleep(req,rem)	
+#    define nanosleep(req,rem)  
 #  endif
 #endif /* !HAVE_NANOSLEEP */
 
@@ -77,83 +77,83 @@ typedef long time_t;
 
 /* Time to pause when doing auto moves (millisec).
  * This number is passed to nanosleep(). */
-#define PAUSETIME	400
+#define PAUSETIME       400
 
 /* Define new games here. Need to add its full name to names below */
-#define FCELL		0
-#define KLOND		1
-#define SPIDER		2
-#define FORTYTH		3
-#define BAKERSD		4
-#define SCORP		5
-#define PENGUIN		6
-#define YUKON		7
-#define STRATEGY	8
-#define NUM_GAMES	9
+#define FCELL           0
+#define KLOND           1
+#define SPIDER          2
+#define FORTYTH         3
+#define BAKERSD         4
+#define SCORP           5
+#define PENGUIN         6
+#define YUKON           7
+#define STRATEGY        8
+#define NUM_GAMES       9
 
 /* This is the maximum number of variations allowed per game */
-#define MAX_VARIATIONS	4
+#define MAX_VARIATIONS  4
 
 /* This produces white space */
-#define NOCARD		(-1)
+#define NOCARD          (-1)
 /* This produces a blank black card */
-#define CARDSPACE	(-2)
+#define CARDSPACE       (-2)
 /* These are for collapsed sequences */
-#define CARDSEQR	(-3)
-#define CARDSEQB	(-4)
+#define CARDSEQR        (-3)
+#define CARDSEQB        (-4)
 /* This is for a deck of cards. The number of cards in the pile 
  * written on a blue card. Cards less than this number will be blue. */
-#define CARDBACK	(-5)
+#define CARDBACK        (-5)
 
-#define SUIT_LENGTH	13
-#define NUM_SUITS	4
-#define KING		12
-#define ACE		0
+#define SUIT_LENGTH     13
+#define NUM_SUITS       4
+#define KING            12
+#define ACE             0
 
 /* These are for checking card sequences */
-#define ASC		0
-#define DESC		1
-#define ANY_ORDER	2
-#define ALT_COL		0
-#define IN_SUIT		1
-#define ANY_SUIT	2
-#define WRAP		0
-#define NO_WRAP		1
-#define FACE_UP		0
-#define FACE_DOWN	100
+#define ASC             0
+#define DESC            1
+#define ANY_ORDER       2
+#define ALT_COL         0
+#define IN_SUIT         1
+#define ANY_SUIT        2
+#define WRAP            0
+#define NO_WRAP         1
+#define FACE_UP         0
+#define FACE_DOWN       100
 
-#define BACK_COLOR	4
-#define HEARTS_COLOR	6
-#define SPADES_COLOR	7
+#define BACK_COLOR      4
+#define HEARTS_COLOR    6
+#define SPADES_COLOR    7
 
-#define PACK_SIZE	52
+#define PACK_SIZE       52
 
-#define MAX_NUM_COLS	13
-#define MAX_COL_LEN	66   
+#define MAX_NUM_COLS    13
+#define MAX_COL_LEN     66   
 /* It is not possible to have more than 19 cards in a column */
 /* unless playing spider, when technically you could have 66 ! */
 
-#define CARD_WIDTH	5
-#define CARD_HEIGHT	2
+#define CARD_WIDTH      5
+#define CARD_HEIGHT     2
 /* positioning info */
 /* How far down the main board is. */
-#define BOARD_Y		1
+#define BOARD_Y         1
 /* How far down the side boards are. */
-#define PILE_Y		2
+#define PILE_Y          2
 /* How far across the first side board is. */
-#define PILE_X		1
+#define PILE_X          1
 /* The size of the board borders */
-#define BORDER		1
+#define BORDER          1
 /* The size of the space between the boards */
-#define SPACE		1
+#define SPACE           1
 
 /* These are for the undo type */
-#define UNDO_NORMAL	0
-#define UNDO_FACE_DOWN	1
-#define UNDO_DISCARD	2
-#define UNDO_ROLLCARDS	3
-#define UNDO_DEAL	4
-#define UNDO_IMPOSSIBLE	5
+#define UNDO_NORMAL     0
+#define UNDO_FACE_DOWN  1
+#define UNDO_DISCARD    2
+#define UNDO_ROLLCARDS  3
+#define UNDO_DEAL       4
+#define UNDO_IMPOSSIBLE 5
 
 typedef struct undo_node
 {
@@ -225,15 +225,15 @@ static char *names[NUM_GAMES] =
 /* Game variations */
 static char *variations[NUM_GAMES][MAX_VARIATIONS] =
     {
-	{"3 freecells","4 freecells","5 freecells",""},
-	{"3 cards/deal","1 card/deal","",""},
-	{"","","",""},
-	{"","","",""},
-	{"","","",""},
-	{"","","",""},
-	{"","","",""},
-	{"","","",""},
-	{"easy","hard","",""}
+        {"3 freecells","4 freecells","5 freecells",""},
+        {"3 cards/deal","1 card/deal","",""},
+        {"","","",""},
+        {"","","",""},
+        {"","","",""},
+        {"","","",""},
+        {"","","",""},
+        {"","","",""},
+        {"easy","hard","",""}
     };
 
 undo_node *pop_items(undo_node *stackTop);
@@ -241,8 +241,8 @@ undo_node *push_items(undo_node *stackTop,int src,int dst,int number,int type);
 void clear_undo(GameInfo* g);
 
 int pager(char *title,char* text,int num_phrases, char **phrases);
-int menu(char *title,int num_items,char **items,char *query,int num_items2,
-	char **items2,char *query2,int num_phrases, char **phrases);
+int menu(char *title,char **queries,int num_queries,
+        char **items,int *num_items, char **phrases,int num_phrases);
 
 void freecell(GameInfo* g);
 void klondike(GameInfo* g);

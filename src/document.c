@@ -18,8 +18,8 @@ void
 rules(GameInfo* g)
 {
     switch(g->game) {
-	case FCELL:	
-	    pager("FreeCell Rules","\
+        case FCELL:     
+            pager("FreeCell Rules","\
 To begin the pack is dealt face up into 8 columns. \
 There are also 4 vacant spaces (free cells) and 4 foundation piles. \
 The objective is to get all the cards onto the foundations.\n\
@@ -60,9 +60,9 @@ column 'd' to column 'c' (if there are enough freecells available). \n\
 \n\
 That's it. Enjoy!!\
 ",0,NULL);
-	    break;
+            break;
     case KLOND:
-       	pager("Klondike Rules","\
+        pager("Klondike Rules","\
 To begin 28 cards are dealt face down into 7 columns with 7 cards in \
 the first column, \
 6 cards in the next, 5 in the next and so on down to 1. The bottom card in \
@@ -100,9 +100,9 @@ card is on the top of the destination pile.\n\
 \n\
 That's it. Enjoy!!\
 ",0,NULL);
-	    break;
+            break;
     case SPIDER:
-       	pager("Spider Rules","\
+        pager("Spider Rules","\
 Two decks of cards are used in this game. To begin 54 cards are dealt face \
 down in 10 columns (6 cards in each of the first 4 columns and 5 for the \
 rest). The bottom card in each column is turned face up. \n\
@@ -139,9 +139,9 @@ column 'd' to column 'c'. \n\
 \n\
 That's it. Enjoy!!\
 ",0,NULL);
-	    break;
+            break;
     case FORTYTH:
-       	pager("40 Thieves Rules","\
+        pager("40 Thieves Rules","\
 Two decks of cards are used in this game. To begin 10 columns of 4 cards \
 each are dealt face up (the 40 Thieves).\n\
 \n\
@@ -172,9 +172,9 @@ waste to the appropriate foundation.\n\
 \n\
 That's it. Enjoy!!\
 ",0,NULL);
-	    break;
+            break;
     case BAKERSD:
-       	pager("Baker's Dozen Rules","\
+        pager("Baker's Dozen Rules","\
 To begin, a single deck of 52 cards is dealt face up into 13 columns. \
 Each column will contain 4 cards. During the deal, Kings are moved to the \
 bottom of the column they are dealt to.\n\
@@ -197,9 +197,9 @@ Baker's Dozen.\n\
 \n\
 That's it. Enjoy!!\
 ",0,NULL);
-	    break;
+            break;
     case SCORP:
-       	pager("Scorpion Rules","\
+        pager("Scorpion Rules","\
 To begin, using a single deck of 52 cards, 7 cards are dealt into 7 \
 columns. All cards are face up except for the bottom three cards on \
 each of the first three columns. The three remaining cards are left \
@@ -240,9 +240,9 @@ To deal the remaining 3 cards, use the 'oo' command.\n\
 \n\
 That's it. Enjoy!!\
 ",0,NULL);
-	    break;
+            break;
     case PENGUIN:
-       	pager("Penguin Rules","\
+        pager("Penguin Rules","\
 To begin, a single deck of 52 cards is dealt face up into 7 \
 columns, each containing 7 cards. The first card that is dealt is known \
 as the beak, and when the (3) other cards of the same rank turn up, they \
@@ -283,9 +283,9 @@ is occupied, this number can be left out.\n\
 \n\
 That's it. Enjoy!!\
 ",0,NULL);
-	    break;
+            break;
     case YUKON:
-       	pager("Yukon Rules","\
+        pager("Yukon Rules","\
 To begin, using a single deck of 52 cards, 28 cards are dealt face down \
 into 7 columns with 7 cards in the first column, \
 6 cards in the next, 5 in the next and so on down to 1. The bottom card in \
@@ -315,9 +315,9 @@ Yukon.\n\
 \n\
 That's it. Enjoy!!\
 ",0,NULL);
-	break;
+        break;
     case STRATEGY:
-       	pager("Strategy Rules","\
+        pager("Strategy Rules","\
 To begin, the Aces are removed from a single deck of 52 cards and placed \
 on the foundations. The game is played in two parts, first cards are dealt \
 from the deck onto any of the four tableau columns, irrespective of suit or \
@@ -343,7 +343,7 @@ requested column twice or by preceding that letter with an 'o' \
 \n\
 That's it. Enjoy!!\
 ",0,NULL);
-	break;
+        break;
     }
 }
 

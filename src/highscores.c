@@ -24,23 +24,23 @@ write_hs(void)
 
     for (i=0;i<NUM_GAMES;i++)
     {
-	for (j=0;j<MAX_VARIATIONS;j++)
-	{
-	    if (hs.total_games[i][j]>0)
-	    {
-		fprintf(fp, "%d %d %d %d %d %d %d %d %d %d\n", 
-			i,
-			j,
-			hs.total_games[i][j],
-			hs.finished_games[i][j],
-			hs.lowest_moves[i][j],
-			hs.lowest_deals[i][j],
-			hs.date_first_game[i][j],
-			hs.date_recent_game[i][j],
-			hs.date_best_game[i][j],
-			hs.seed[i][j]);
-	    }
-	}
+        for (j=0;j<MAX_VARIATIONS;j++)
+        {
+            if (hs.total_games[i][j]>0)
+            {
+                fprintf(fp, "%d %d %d %d %d %d %d %d %d %d\n", 
+                        i,
+                        j,
+                        hs.total_games[i][j],
+                        hs.finished_games[i][j],
+                        hs.lowest_moves[i][j],
+                        hs.lowest_deals[i][j],
+                        hs.date_first_game[i][j],
+                        hs.date_recent_game[i][j],
+                        hs.date_best_game[i][j],
+                        hs.seed[i][j]);
+            }
+        }
     }
 
     fclose(fp);
@@ -54,17 +54,17 @@ initialise_hs(void)
     int i,j;
     for (i=0;i<NUM_GAMES;i++)
     {
-	for (j=0;j<MAX_VARIATIONS;j++)
-	{
-    	    hs.total_games[i][j]=0;
-    	    hs.finished_games[i][j]=0;
-    	    hs.lowest_moves[i][j]=-1;
-    	    hs.lowest_deals[i][j]=-1;
-    	    hs.date_first_game[i][j]=-1;
-    	    hs.date_recent_game[i][j]=-1;
-    	    hs.date_best_game[i][j]=-1;
-    	    hs.seed[i][j]=-1;
-	}
+        for (j=0;j<MAX_VARIATIONS;j++)
+        {
+            hs.total_games[i][j]=0;
+            hs.finished_games[i][j]=0;
+            hs.lowest_moves[i][j]=-1;
+            hs.lowest_deals[i][j]=-1;
+            hs.date_first_game[i][j]=-1;
+            hs.date_recent_game[i][j]=-1;
+            hs.date_best_game[i][j]=-1;
+            hs.seed[i][j]=-1;
+        }
     }
 }
 
@@ -79,61 +79,61 @@ read_hs(void)
     char buffer[200];
 
     if ((fp = fopen(hs.filename, "r")) == NULL)
-	/* No file, we assume we haven't played before */
-	return;
+        /* No file, we assume we haven't played before */
+        return;
 
     got_something=0;
     file_empty=1;
 
     while( fgets(buffer, sizeof(buffer), fp) != NULL )
     {
-	file_empty=0;
-	items_matched=sscanf(buffer, "%d %d %d %d %d %d %d %d %d %d", 
-		&i,
-		&j,
-		&total_games,
-		&finished_games,
-		&lowest_moves,
-		&lowest_deals,
-		&date_first_game,
-		&date_recent_game,
-		&date_best_game,
-		&seed);
-	if (items_matched==10)
-	{
-	    got_something=1;
-    	    hs.total_games[i][j]	= total_games;
-    	    hs.finished_games[i][j]	= finished_games;
-    	    hs.lowest_moves[i][j]	= lowest_moves;
-    	    hs.lowest_deals[i][j]	= lowest_deals;
-    	    hs.date_first_game[i][j]= date_first_game;
-    	    hs.date_recent_game[i][j]= date_recent_game;
-    	    hs.date_best_game[i][j]	= date_best_game;
-    	    hs.seed[i][j]	= seed;
-	}
+        file_empty=0;
+        items_matched=sscanf(buffer, "%d %d %d %d %d %d %d %d %d %d", 
+                &i,
+                &j,
+                &total_games,
+                &finished_games,
+                &lowest_moves,
+                &lowest_deals,
+                &date_first_game,
+                &date_recent_game,
+                &date_best_game,
+                &seed);
+        if (items_matched==10)
+        {
+            got_something=1;
+            hs.total_games[i][j]        = total_games;
+            hs.finished_games[i][j]     = finished_games;
+            hs.lowest_moves[i][j]       = lowest_moves;
+            hs.lowest_deals[i][j]       = lowest_deals;
+            hs.date_first_game[i][j]= date_first_game;
+            hs.date_recent_game[i][j]= date_recent_game;
+            hs.date_best_game[i][j]     = date_best_game;
+            hs.seed[i][j]       = seed;
+        }
     }
     fclose(fp);
 
     if (got_something==0 && file_empty==0)
     {
-	printf("\nProblem reading cpat score file: %s\n",hs.filename);
-	printf("Shall we overwrite this file? (y/N) ");
-	input=fgetc(stdin);
+        printf("\nProblem reading cpat score file: %s\n",hs.filename);
+        printf("Shall we overwrite this file? (y/N) ");
+        input=fgetc(stdin);
 
-    	if (input=='y' || input=='Y')
-	{
-	    if (remove(hs.filename))
-	    {
-		/* Could not write */
-		printf("Could not overwrite file... continuing without high score support.\n");
-		hs.available = FALSE;
-	    }
-	}
-	else
-	{
-	    printf("Continuing without high score support.\n");
-	    hs.available=FALSE;
-	}
+        if (input=='y' || input=='Y')
+        {
+            if (remove(hs.filename))
+            {
+                /* Could not write */
+                printf("Could not overwrite file... continuing without high score support.\n");
+                hs.available = FALSE;
+            }
+        }
+        else
+        {
+            printf("Continuing without high score support.\n");
+            hs.available=FALSE;
+        }
     }
 }
 
@@ -155,16 +155,16 @@ game_stats(int type)
 
     for (i=0;i<NUM_GAMES;i++)
     {
-	for (j=0;j<MAX_VARIATIONS;j++)
-	{
-	    if ((type==0 && hs.total_games[i][j]>0) || 
-		    (type==1 && hs.finished_games[i][j]>0))
-		num_lines++;
-	    if (strlen(variations[i][j])>variation_len)
-		variation_len=strlen(variations[i][j]);
-	}
-	if (strlen(names[i])>name_len)
-	    name_len=strlen(names[i]);
+        for (j=0;j<MAX_VARIATIONS;j++)
+        {
+            if ((type==0 && hs.total_games[i][j]>0) || 
+                    (type==1 && hs.finished_games[i][j]>0))
+                num_lines++;
+            if (strlen(variations[i][j])>variation_len)
+                variation_len=strlen(variations[i][j]);
+        }
+        if (strlen(names[i])>name_len)
+            name_len=strlen(names[i]);
     }
 
     snprintf(name_dashes,30,"---------------------------");
@@ -178,21 +178,21 @@ game_stats(int type)
     header[1] = (char *)malloc (line_len);
     if (type==0)
     {
-      	snprintf(header[0],200,"%-*s %-*s %-4s %-4s %-10s %-11s",
-    		name_len,"Game",variation_len,"Variation",
-    		"Trys","Wins","First Game","Latest Game");
-       	snprintf(header[1],200,"%-*s %-*s %-4s %-4s %-10s %-11s",
-    		name_len,name_dashes,variation_len,var_dashes,
-    		"----","----","----------","-----------");
+        snprintf(header[0],200,"%-*s %-*s %-4s %-4s %-10s %-11s",
+                name_len,"Game",variation_len,"Variation",
+                "Trys","Wins","First Game","Latest Game");
+        snprintf(header[1],200,"%-*s %-*s %-4s %-4s %-10s %-11s",
+                name_len,name_dashes,variation_len,var_dashes,
+                "----","----","----------","-----------");
     }
     else
     {
-    	snprintf(header[0],200,"%-*s %-*s %-5s %-5s %-10s %-10s",
-    		name_len,"Game",variation_len,"Variation",
-    		"Moves","Deals","Date","Seed");
-       	snprintf(header[1],200,"%-*s %-*s %-5s %5s %-10s %-10s",
-    		name_len,name_dashes,variation_len,var_dashes,
-    		"-----", "-----", "----------", "----------");
+        snprintf(header[0],200,"%-*s %-*s %-5s %-5s %-10s %-10s",
+                name_len,"Game",variation_len,"Variation",
+                "Moves","Deals","Date","Seed");
+        snprintf(header[1],200,"%-*s %-*s %-5s %5s %-10s %-10s",
+                name_len,name_dashes,variation_len,var_dashes,
+                "-----", "-----", "----------", "----------");
     }
     
     /* num_lines+1 so that its never 0 */
@@ -201,40 +201,40 @@ game_stats(int type)
     snprintf(string,200,"No stats available.");
     for (i=0;i<NUM_GAMES;i++)
     {
-	for (j=0;j<MAX_VARIATIONS;j++)
-	{
-	    if (type==0 && hs.total_games[i][j]>0)
-	    {
-		if (firsttime++) 
-		    strncat(string,"\n",1);
-		else 
-		    snprintf(string,200,"");
-		strftime(time1,11,"%F",localtime(&hs.date_first_game[i][j]));
-		strftime(time2,11,"%F",localtime(&hs.date_recent_game[i][j]));
-	       	snprintf(temp,200,"%-*s %-*s %4d %4d %10s %11s",
-			name_len,names[i],
-			variation_len,variations[i][j],
-	    		hs.total_games[i][j],
-	    		hs.finished_games[i][j],
-			time1,time2);
-	       	strncat(string,temp,200);
-	    }
-	    else if (type==1 && hs.finished_games[i][j]>0)
-	    {
-		if (firsttime++) 
-		    strncat(string,"\n",1);
-		else 
-		    snprintf(string,200,"");
-		strftime(time1,11,"%F",localtime(&hs.date_best_game[i][j]));
-	       	snprintf(temp,200,"%-*s %-*s %5d %5d %10s %10d",
-			name_len,names[i],
-			variation_len,variations[i][j],
-	    		hs.lowest_moves[i][j],
-	    		hs.lowest_deals[i][j]==-1?0:hs.lowest_deals[i][j],
-			time1,hs.seed[i][j]);
-	       	strncat(string,temp,200);
-	    }
-	}
+        for (j=0;j<MAX_VARIATIONS;j++)
+        {
+            if (type==0 && hs.total_games[i][j]>0)
+            {
+                if (firsttime++) 
+                    strncat(string,"\n",1);
+                else 
+                    snprintf(string,200,"");
+                strftime(time1,11,"%F",localtime(&hs.date_first_game[i][j]));
+                strftime(time2,11,"%F",localtime(&hs.date_recent_game[i][j]));
+                snprintf(temp,200,"%-*s %-*s %4d %4d %10s %11s",
+                        name_len,names[i],
+                        variation_len,variations[i][j],
+                        hs.total_games[i][j],
+                        hs.finished_games[i][j],
+                        time1,time2);
+                strncat(string,temp,200);
+            }
+            else if (type==1 && hs.finished_games[i][j]>0)
+            {
+                if (firsttime++) 
+                    strncat(string,"\n",1);
+                else 
+                    snprintf(string,200,"");
+                strftime(time1,11,"%F",localtime(&hs.date_best_game[i][j]));
+                snprintf(temp,200,"%-*s %-*s %5d %5d %10s %10d",
+                        name_len,names[i],
+                        variation_len,variations[i][j],
+                        hs.lowest_moves[i][j],
+                        hs.lowest_deals[i][j]==-1?0:hs.lowest_deals[i][j],
+                        time1,hs.seed[i][j]);
+                strncat(string,temp,200);
+            }
+        }
     }
 
     /* Print highscore table for all games */
