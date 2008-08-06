@@ -159,7 +159,8 @@ q                    Exit pager";
     {
         wclear(input);
         wmove(input,0,0);
-        for (i = line;i < line+win_h-2;) {
+        for (i = line;i < line+win_h-2;)
+        {
             strncpy(char_p,start_line[i],(int)(end_line[i]-start_line[i]));
             char_p[(int)(end_line[i]-start_line[i])] = '\0';
             wprintw(input,"%s\n",char_p);
@@ -241,8 +242,7 @@ menu(char *title,char **queries,int num_queries,
     int inner_w,inner_h,inner_x,inner_y;
     int outer_w,outer_h,outer_x,outer_y;
     int lines[num_queries],total_lines,i,j,total_items;
-    int name_len=0;
-
+    int name_len = 0;
 
     /* Initial values for outer window */
     outer_w = COLS-8;
@@ -253,15 +253,15 @@ menu(char *title,char **queries,int num_queries,
     phrases_y = 4;
     
     total_items = 0;
-    for (i=0;i<num_queries;i++)
+    for (i = 0;i < num_queries;i++)
     {
         total_items += num_items[i];
         lines[i] = (num_items[i]+1)/2; /* two column view */
     }
 
-    for (i=0;i<total_items;i++)
+    for (i = 0;i < total_items;i++)
         if (strlen(items[i])>name_len)
-            name_len=strlen(items[i]);
+            name_len = strlen(items[i]);
 
     /* First make adjustments to width of windows */
     inner_w = 2*(name_len+10);
@@ -269,62 +269,45 @@ menu(char *title,char **queries,int num_queries,
     {
         /* Outer win way too thin, change to one column view */
         inner_w = (name_len+14);
-        if (inner_w < 37) inner_w=37;
-        if (inner_w > COLS-14) inner_w=COLS-14;
-        for (i=0;i<num_queries;i++)
+        if (inner_w < 37) inner_w = 37;
+        if (inner_w > COLS-14) inner_w = COLS-14;
+        for (i = 0;i < num_queries;i++)
             lines[i] = num_items[i]; /* one column view */
     }
-    else if (inner_w>outer_w-4)
+    else if (inner_w > outer_w-4)
     {
         /* Outer win only just to thin, increase it by 4 */
-        outer_w=COLS-4;
-        outer_x=2;
+        outer_w = COLS-4;
+        outer_x = 2;
     }
 
     total_lines = 0;
-    for (i=0;i<num_queries;i++)
+    for (i = 0;i < num_queries;i++)
         total_lines += lines[i];
 
     inner_x = outer_x+(outer_w-inner_w)/2;
+    inner_h = total_lines+num_queries+4;
+    inner_y = outer_y+num_phrases+(num_phrases?5:4);
 
-    inner_h = total_lines+num_queries*1+4;
-    inner_y=outer_y+5+num_phrases;;
-    if (inner_h>outer_h-2-num_phrases)
-    {
-        title_y -= 1;
-        phrases_y -= 2;
-        outer_h += 2;
-        outer_y -= 1;
-        inner_y -= 4;
-    }
-    else if (inner_h>outer_h-3-num_phrases)
-    {
-        title_y -= 1;
-        phrases_y -= 1;
-        outer_h += 2;
-        outer_y -= 1;
-        inner_y -= 3;
-    }
-    else if (inner_h>outer_h-4-num_phrases)
-    {
-        outer_h += 2;
-        outer_y -= 1;
-        inner_y -= 2;
-    }
-    else if (inner_h>outer_h-7-num_phrases)
-    {
-        outer_h += 2;
-        outer_y -= 1;
-        inner_y -= (num_phrases)?1:2;
-    }
-    else if (inner_h>outer_h-9 && num_phrases==0)
-        inner_y -= 1;
-
-    if (inner_h > LINES-inner_y)
+    if (inner_h > outer_h-num_phrases-1)
     {
         endwin();
         puts ("CPat Error: your screen is too small.");
         exit (1);
+    }
+
+    if (inner_h > outer_h-num_phrases-(num_phrases?8:7))
+    {
+        outer_y--;
+        inner_y--;
+        outer_h += 2;
+        total_lines = outer_h-inner_h-num_phrases-1;
+        if (total_lines < 5) inner_y -= (num_phrases?5:4)-total_lines;
+        if (total_lines < 4)
+        {
+            title_y--;
+            phrases_y -= 4-total_lines;
+        }
     }
 
     main = newwin(outer_h,outer_w,outer_y,outer_x);
@@ -336,7 +319,7 @@ menu(char *title,char **queries,int num_queries,
     wattron(main,A_UNDERLINE);
     mvwprintw(main,title_y,4,title);
     wattroff(main,A_UNDERLINE);
-    for (i=0;i<num_phrases;i++) 
+    for (i = 0;i < num_phrases;i++) 
         mvwprintw(main,phrases_y+i,6,phrases[i]);
     wrefresh(main);
 
@@ -345,12 +328,12 @@ menu(char *title,char **queries,int num_queries,
     wbkgdset(input, COLOR_PAIR(BACK_COLOR) | A_REVERSE | A_BOLD);
     wclear(input);
 
-    total_lines=1;
-    total_items=0;
-    for (j=0;j<num_queries;j++)
+    total_lines = 1;
+    total_items = 0;
+    for (j = 0;j < num_queries;j++)
     {
         mvwaddstr(input, total_lines++,2,queries[j]);
-        for (i=0;i<num_items[j];i++)
+        for (i = 0;i < num_items[j];i++)
         {
             mvwprintw(input,total_lines+i%lines[j],i<lines[j]?4:name_len+12,"[%c] - %s",'a'+total_items,items[total_items]);
             total_items++;
@@ -360,9 +343,9 @@ menu(char *title,char **queries,int num_queries,
 
     mvwaddstr(input,++total_lines,2,"Enter your choice ('q' to quit): ");
     while (!(inp = wgetch(input)) || 
-            (inp!='q' && (inp<'a'||inp>='a'+total_items)));
+            (inp != 'q' && (inp < 'a'||inp >= 'a'+total_items)));
 
-    if (inp=='q') die(0);
+    if (inp == 'q') die(0);
 
     delwin(input);
     delwin(main);
