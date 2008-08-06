@@ -18,7 +18,7 @@ static void play(GameInfo* g);
 
 static void init_vars(GameInfo* g)
 {
-    int i,j,numswaps,swapnum,temp;
+    int i,j;
 
     g->num_cols=7;
     g->num_foun=4;

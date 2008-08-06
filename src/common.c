@@ -223,7 +223,7 @@ turnover_waste(GameInfo* g)
 void
 foundation_automove(int number,GameInfo* g)
 {
-    int number_found,i,j,suit,rank,card;
+    int number_found,j,suit,rank,card;
 
     number_found=0;
     /* Loop through columns then FreeCells */
@@ -542,6 +542,7 @@ game_finished(GameInfo* g,char* game_str)
         case 3:
             return 1;
     }
+    return 1;
 }
 
 /* Prints a card! x and y contain the placement of the card relative
@@ -995,7 +996,6 @@ undo_move(GameInfo* g)
 int 
 grab_input(GameInfo* g, int* src, int* dst, int* number)
 {
-    char chr;
     int inp;
     int *p;
 
@@ -1031,35 +1031,35 @@ grab_input(GameInfo* g, int* src, int* dst, int* number)
             case 's':
                 *src=NOCARD;
                 kill_windows(g);
-                if (create_windows(g)) return;
+                if (create_windows(g)) return 1;
                 draw_screen(g);
                 return(0);
             case 'w':
                 *src=NOCARD;
                 kill_windows(g);
                 license();      /* Display license */
-                if (create_windows(g)) return;
+                if (create_windows(g)) return 1;
                 draw_screen(g);
                 return(0);
             case 't':
                 *src=NOCARD;
                 kill_windows(g);
                 credits();      /* Display credits */
-                if (create_windows(g)) return;
+                if (create_windows(g)) return 1;
                 draw_screen(g);
                 return(0);
             case 'r':
                 *src=NOCARD;
                 kill_windows(g);
                 rules(g);       /* Display games rules */
-                if (create_windows(g)) return;
+                if (create_windows(g)) return 1;
                 draw_screen(g);
                 return(0);
             case '?':
                 *src=NOCARD;
                 kill_windows(g);
                 help(); /* Display general help */
-                if (create_windows(g)) return;
+                if (create_windows(g)) return 1;
                 draw_screen(g);
                 return(0);
             case 'z':
@@ -1068,7 +1068,7 @@ grab_input(GameInfo* g, int* src, int* dst, int* number)
                 {
                     kill_windows(g);
                     dump_vars(g);       
-                    if (create_windows(g)) return;
+                    if (create_windows(g)) return 1;
                     draw_screen(g);
                 }
                 return(0);
@@ -1190,10 +1190,10 @@ dump_vars(GameInfo* g)
     snprintf(temp,200,"hs.lowest_deals: %d\n",
             hs.lowest_deals[g->game][g->variation]);
     strncat(string,temp,200);
-    snprintf(temp,200,"hs.date_first_game: %d\n",
+    snprintf(temp,200,"hs.date_first_game: %ld\n",
             hs.date_first_game[g->game][g->variation]);
     strncat(string,temp,200);
-    snprintf(temp,200,"hs.date_best_game: %d\n",
+    snprintf(temp,200,"hs.date_best_game: %ld\n",
             hs.date_best_game[g->game][g->variation]);
     strncat(string,temp,200);
     snprintf(temp,200,"hs.seed: %d\n",

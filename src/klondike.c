@@ -18,7 +18,7 @@ static void play(GameInfo* g);
 
 static int init_vars(GameInfo* g)
 {
-    int i,j,numswaps,swapnum,temp;
+    int i,j;
     int num_items[1] = {3};
     char title[40];
     char *queries[1] = {"Choose normal or easy:"};

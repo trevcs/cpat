@@ -361,7 +361,7 @@ all times:\n\
  '?'  Prints what you are currently reading.\n\
  'r'  Will print the rules of the current game.\n\
  'u'  Will undo the previous move if this is allowed. You can undo only \
-those moves that do  not  reveal  any new  information (e.g. moving \
+those moves that do not reveal any new information (e.g. moving \
 cards from one column to another).\n\
  't'  Will show credit where it is due.\n\
  'w'  Will print license and warranty information.\n\

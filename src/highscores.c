@@ -28,7 +28,7 @@ write_hs(void)
         {
             if (hs.total_games[i][j]>0)
             {
-                fprintf(fp, "%d %d %d %d %d %d %d %d %d %d\n", 
+                fprintf(fp, "%d %d %d %d %d %d %ld %ld %ld %d\n",
                         i,
                         j,
                         hs.total_games[i][j],
@@ -208,7 +208,7 @@ game_stats(int type)
                 if (firsttime++) 
                     strncat(string,"\n",1);
                 else 
-                    snprintf(string,200,"");
+                    string[0]='\0';
                 strftime(time1,11,"%F",localtime(&hs.date_first_game[i][j]));
                 strftime(time2,11,"%F",localtime(&hs.date_recent_game[i][j]));
                 snprintf(temp,200,"%-*s %-*s %4d %4d %10s %11s",
@@ -224,7 +224,7 @@ game_stats(int type)
                 if (firsttime++) 
                     strncat(string,"\n",1);
                 else 
-                    snprintf(string,200,"");
+                    string[0]='\0';
                 strftime(time1,11,"%F",localtime(&hs.date_best_game[i][j]));
                 snprintf(temp,200,"%-*s %-*s %5d %5d %10s %10d",
                         name_len,names[i],

@@ -18,7 +18,7 @@ static void play(GameInfo* g);
 
 static int init_vars(GameInfo* g)
 {
-    int i,j,numswaps,swapnum,temp;
+    int i,j;
 
     int num_items[1] = {3};
     char title[40];
@@ -81,8 +81,7 @@ static int init_vars(GameInfo* g)
 
 static void play(GameInfo* g)
 {
-    int i,number;
-    int card,color,rank;
+    int number,card;
     int src,dst;
 
     while (g->finished_foundations < g->num_foun)

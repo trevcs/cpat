@@ -25,6 +25,7 @@
  *****************************************************************************/
 
 #include "cpat.h"
+#include "document.h"
 #include "highscores.h"
 
 /* To catch kill signals and exit cleanly */
@@ -72,10 +73,10 @@ void clear_undo(GameInfo* g)
 }
 
 /* Creates windows to write stuff not in a game */
-int
+void
 pager(char *title,char* text,int num_phrases, char **phrases)
 {
-    WINDOW *main,*input;
+    WINDOW *outer,*input;
     int win_w,win_h;
     int i,line,max_line,prev_line;
     char *char_p,**start_line,**end_line;
@@ -95,17 +96,17 @@ q                    Exit pager";
     /* Values for outer window */
     win_w = COLS-8;
     win_h = LINES-4;
-    main = newwin(win_h,win_w,2,4);
-    wbkgdset(main, boardbkgd);
-    wclear(main);
-    box(main,0,0);
+    outer = newwin(win_h,win_w,2,4);
+    wbkgdset(outer, boardbkgd);
+    wclear(outer);
+    box(outer,0,0);
 
     /* Add title and header lines */
-    wattron(main,A_UNDERLINE);
-    mvwprintw(main,2,4,title);
-    wattroff(main,A_UNDERLINE);
-    for (i = 0;i < num_phrases;i++) mvwprintw(main,4+i,4,phrases[i]);
-    wrefresh(main);
+    wattron(outer,A_UNDERLINE);
+    mvwprintw(outer,2,4,title);
+    wattroff(outer,A_UNDERLINE);
+    for (i = 0;i < num_phrases;i++) mvwprintw(outer,4+i,4,phrases[i]);
+    wrefresh(outer);
 
     /* Values for inner window */
     win_w = win_w-7;
@@ -224,7 +225,7 @@ q                    Exit pager";
     free(char_p);
     /* Now delete windows */
     delwin(input);
-    delwin(main);
+    delwin(outer);
     clear();
     refresh();
 }
@@ -235,7 +236,7 @@ menu(char *title,char **queries,int num_queries,
         char **items,int *num_items,
         char **phrases,int num_phrases)
 {
-    WINDOW *main,*input;
+    WINDOW *outer,*input;
     char inp;
     int title_y;
     int phrases_y;
@@ -310,18 +311,18 @@ menu(char *title,char **queries,int num_queries,
         }
     }
 
-    main = newwin(outer_h,outer_w,outer_y,outer_x);
+    outer = newwin(outer_h,outer_w,outer_y,outer_x);
 
-    wbkgdset(main, boardbkgd);
-    wclear(main);
-    box(main, 0, 0);
+    wbkgdset(outer, boardbkgd);
+    wclear(outer);
+    box(outer, 0, 0);
 
-    wattron(main,A_UNDERLINE);
-    mvwprintw(main,title_y,4,title);
-    wattroff(main,A_UNDERLINE);
+    wattron(outer,A_UNDERLINE);
+    mvwprintw(outer,title_y,4,title);
+    wattroff(outer,A_UNDERLINE);
     for (i = 0;i < num_phrases;i++) 
-        mvwprintw(main,phrases_y+i,6,phrases[i]);
-    wrefresh(main);
+        mvwprintw(outer,phrases_y+i,6,phrases[i]);
+    wrefresh(outer);
 
     input = newwin(inner_h,inner_w,inner_y,inner_x);
     wattron(input,A_REVERSE | COLOR_PAIR(BACK_COLOR) | A_BOLD);
@@ -348,12 +349,13 @@ menu(char *title,char **queries,int num_queries,
     if (inp == 'q') die(0);
 
     delwin(input);
-    delwin(main);
+    delwin(outer);
     clear();
     refresh();
     return (inp-'a');
 }
 
+int
 main(int argc, char **argv, char *envp[])
 {
 #ifdef HAVE_GETOPT_LONG

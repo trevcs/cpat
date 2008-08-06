@@ -10,13 +10,13 @@
  *                                                                           *
  *****************************************************************************/
 
-#ifndef CPAT_DOCUMENT_H
-#define CPAT_DOCUMENT_H 1
+#ifndef CPAT_HIGHSCORES_H
+#define CPAT_HIGHSCORES_H 1
 
 int write_hs(void);
 void initialise_hs(void);
 void read_hs(void);
 void game_stats(int type);
 
-#endif /* !CPAT_DOCUMENT_H */
+#endif /* !CPAT_HIGHSCORES_H */
 /* document.h ends here */

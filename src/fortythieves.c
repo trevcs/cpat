@@ -20,7 +20,7 @@ static void play(GameInfo* g);
 static void
 init_vars(GameInfo* g)
 {
-    int i,j,temp;
+    int i;
 
     /* game specific variables */
     g->num_cols=10;

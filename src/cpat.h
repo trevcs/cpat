@@ -240,7 +240,7 @@ undo_node *pop_items(undo_node *stackTop);
 undo_node *push_items(undo_node *stackTop,int src,int dst,int number,int type);
 void clear_undo(GameInfo* g);
 
-int pager(char *title,char* text,int num_phrases, char **phrases);
+void pager(char *title,char* text,int num_phrases, char **phrases);
 int menu(char *title,char **queries,int num_queries,
         char **items,int *num_items, char **phrases,int num_phrases);
 

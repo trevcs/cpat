@@ -18,8 +18,7 @@ static void play(GameInfo* g);
 
 static void init_vars(GameInfo* g)
 {
-    int i,j,numswaps,swapnum,temp;
-    int double_deck[2*PACK_SIZE];
+    int i,j;
 
     g->num_cols=7;
     g->num_foun=0;
@@ -54,8 +53,7 @@ static void init_vars(GameInfo* g)
 
 static void play(GameInfo* g)
 {
-    int i,j,number;
-    int rank,suit,card,color;
+    int i,j,number,card;
     int number_found; /* number of cards moved to foundation automatically */
     int src,dst;
     char temp_str[20];
