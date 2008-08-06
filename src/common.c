@@ -44,6 +44,17 @@ create_windows(GameInfo* g)
     freepile_h = (g->num_free) ? g->num_free*CARD_HEIGHT+2*BORDER+1 : 0;
     freepile_w = (g->num_free) ? CARD_WIDTH+2*BORDER : 0;
 
+    /* Check if screen size big enough */
+    max_x = freepile_x+freepile_w;
+    max_y = PILE_Y + ((freepile_h > founpile_h) ? freepile_h : founpile_h);
+    if (max_x > COLS || max_y > LINES)
+    {
+        clear();
+        (void)printw( "Screen size too small. Enlarge to %dx%d.",max_x,max_y);
+        refresh();
+        return(1);
+    }
+
     hint_x = freepile_x + freepile_w + (g->num_free?SPACE:0);
     hint_y = PILE_Y;
     input_x = freepile_x;
@@ -110,17 +121,6 @@ create_windows(GameInfo* g)
             hint_y -= 2;
     }
     
-    /* Check if screen size big enough */
-    max_x = freepile_x+freepile_w;
-    max_y = PILE_Y + ((freepile_h > founpile_h) ? freepile_h : founpile_h);
-    if (max_x > COLS || max_y > LINES)
-    {
-        clear();
-        (void)printw( "Screen size too small. Enlarge to %dx%d.",max_x,max_y);
-        refresh();
-        return(1);
-    }
-
     /* Now create windows */
     if (g->num_foun) g->found = newwin(founpile_h,founpile_w,PILE_Y,PILE_X);
     g->main = newwin(main_h,main_w,main_y,main_x);
