@@ -249,13 +249,13 @@ foundation_automove(int number,GameInfo* g)
          * foundation if this card were on the top. */
         rank = (card+SUIT_LENGTH-g->foun_start)%SUIT_LENGTH;
         /* suit can go from 0-7 */
-        suit = (g->foun_size[card/SUIT_LENGTH] > 
-                ((g->foun_dir==DESC)?SUIT_LENGTH-1-rank:rank)) 
+        suit = (g->foun_size[card/SUIT_LENGTH] >
+                ((g->foun_dir==DESC)?SUIT_LENGTH-1-rank:rank))
             ? card / SUIT_LENGTH + NUM_SUITS : card / SUIT_LENGTH;
-        if ((g->foundation[suit]+SUIT_LENGTH-g->foun_start)%SUIT_LENGTH==rank-1
-                || (g->foundation[suit]==NOCARD 
-                    && card%SUIT_LENGTH==g->foun_start))
-        {
+        if (((g->foundation[suit]+SUIT_LENGTH-g->foun_start)%SUIT_LENGTH==rank-1
+                    && g->foundation[suit]!=NOCARD)
+                || (g->foundation[suit]==NOCARD
+                    && card%SUIT_LENGTH==g->foun_start)) {
             if (number_found++) nanosleep(&pauselength,&pauseleft);
             move_card(j,g->num_cols+g->num_free,1,g);
             j=-1;
@@ -414,11 +414,12 @@ check_move(int col,int card,int direction,int type,int wrap,GameInfo* g)
          * foundation if this card were to go on next. */
         rank = (card+SUIT_LENGTH-g->foun_start)%SUIT_LENGTH;
         /* suit can go from 0-7 */
-        suit = (g->foun_size[card/SUIT_LENGTH] > 
-                ((g->foun_dir==DESC)?SUIT_LENGTH-1-rank:rank)) 
+        suit = (g->foun_size[card/SUIT_LENGTH] >
+                ((g->foun_dir==DESC)?SUIT_LENGTH-1-rank:rank))
             ? card / SUIT_LENGTH + NUM_SUITS : card / SUIT_LENGTH;
-        if ((g->foundation[suit]+SUIT_LENGTH-g->foun_start)%SUIT_LENGTH!=rank-1
-                && (g->foundation[suit]!=NOCARD 
+        if (((g->foundation[suit]+SUIT_LENGTH-g->foun_start)%SUIT_LENGTH!=rank-1
+                    || g->foundation[suit]==NOCARD)
+                && (g->foundation[suit]!=NOCARD
                     || card%SUIT_LENGTH!=g->foun_start))
         {
             show_error("Bad move.",g->input);
@@ -561,6 +562,8 @@ printcard(WINDOW *win,int y,int x,int value,GameInfo* g)
         wattron(win,A_REVERSE | COLOR_PAIR(BACK_COLOR));
         if (value==CARDBACK)
             (void) wprintw(win,"%3d",g->face_down);
+        else if (value==CARDRESERVE)
+            (void) wprintw(win,"%3d",g->col_size[g->num_cols]+1);
         else
             (void) waddstr(win,"   ");
     }
@@ -938,6 +941,15 @@ undo_move(GameInfo* g)
             g->deals--;
             draw_piles(g->free,g);
             draw_piles(g->main,g);
+            return;
+        }
+        else if (g->undo->type == UNDO_RESERVE)
+        {
+            g->cols[g->undo->src][++g->col_size[g->undo->src]] = 
+                g->cols[g->undo->dst][g->col_size[g->undo->dst]--];
+            draw_piles(g->free,g);
+            g->undo = pop_items(g->undo);
+            undo_move(g);
             return;
         }
         else if (g->undo->type == UNDO_ROLLCARDS)

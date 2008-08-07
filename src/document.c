@@ -343,6 +343,32 @@ requested column twice or by preceding that letter with an 'o' \
 \n\
 That's it. Enjoy!!\
 ",0,NULL);
+    case CANFIELD:
+        pager("Canfield Rules","\
+To begin one card is dealt to a foundation pile and the other 3 foundation \
+piles must begin with a card of this rank. One card is then dealt onto each \
+of the four tableau columns and 13 cards are moved aside into a reserve \
+pile (the lower pile in the right-hand side column). \
+The remaining 34 cards can be dealt three at a time onto the waste.\n\
+\n\
+The four foundation piles are built up in suit and can wrap from King to \
+Ace. The columns on the tableau are built down by alternating colour and \
+can wrap from Ace to King. Cards can be moved from column to column either \
+singly or as an entire column, but not a partial column. When a tableau \
+stack becomes empty, a card from the reserve is moved to that column \
+automatically.\n\
+\n\
+How to play Canfield:\n\
+\n\
+Canfield is laid out with the columns [a-d] in the centre, the 4 \
+foundation [p]iles on the left and the deck, waste and reserve piles on the \
+[o]ther board on the right.\n\
+\n\
+For general instructions on moving cards around see the help text (press \
+the '?' key in the main game window).\n\
+\n\
+That's it. Enjoy!!\
+",0,NULL);
         break;
     }
 }

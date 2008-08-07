@@ -537,6 +537,9 @@ main(int argc, char **argv, char *envp[])
             case STRATEGY:
                 strategy(&g);
                 break;
+            case CANFIELD:
+                canfield(&g);
+                break;
             case NUM_GAMES:
                 help();
                 break;

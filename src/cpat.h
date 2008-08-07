@@ -89,7 +89,8 @@ typedef long time_t;
 #define PENGUIN         6
 #define YUKON           7
 #define STRATEGY        8
-#define NUM_GAMES       9
+#define CANFIELD        9
+#define NUM_GAMES      10
 
 /* This is the maximum number of variations allowed per game */
 #define MAX_VARIATIONS  4
@@ -104,6 +105,7 @@ typedef long time_t;
 /* This is for a deck of cards. The number of cards in the pile 
  * written on a blue card. Cards less than this number will be blue. */
 #define CARDBACK        (-5)
+#define CARDRESERVE     (-6)
 
 #define SUIT_LENGTH     13
 #define NUM_SUITS       4
@@ -153,7 +155,8 @@ typedef long time_t;
 #define UNDO_DISCARD    2
 #define UNDO_ROLLCARDS  3
 #define UNDO_DEAL       4
-#define UNDO_IMPOSSIBLE 5
+#define UNDO_RESERVE    5
+#define UNDO_IMPOSSIBLE 6
 
 typedef struct undo_node
 {
@@ -220,7 +223,7 @@ static chtype boardbkgd = ' ' | COLOR_PAIR(SPADES_COLOR);
 /* Game names */
 static char *names[NUM_GAMES] =
     {"FreeCell","Klondike","Spider","40 Thieves","Baker's Dozen","Scorpion",
-    "Penguin","Yukon","Strategy"};
+    "Penguin","Yukon","Strategy","Canfield"};
 
 /* Game variations */
 static char *variations[NUM_GAMES][MAX_VARIATIONS] =
@@ -233,7 +236,8 @@ static char *variations[NUM_GAMES][MAX_VARIATIONS] =
         {"","","",""},
         {"","","",""},
         {"","","",""},
-        {"easy","hard","",""}
+        {"easy","hard","",""},
+        {"","","",""}
     };
 
 undo_node *pop_items(undo_node *stackTop);
@@ -253,6 +257,7 @@ void scorpion(GameInfo* g);
 void penguin(GameInfo* g);
 void yukon(GameInfo* g);
 void strategy(GameInfo* g);
+void canfield(GameInfo* g);
 
 void die(int onsig);
 
