@@ -150,7 +150,6 @@ play(GameInfo* g)
             if (j) nanosleep(&pauselength,&pauseleft);
             move_card(src,dst,1,g);
         }
-
     }
 }
 

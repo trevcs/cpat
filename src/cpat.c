@@ -540,6 +540,9 @@ main(int argc, char **argv, char *envp[])
             case CANFIELD:
                 canfield(&g);
                 break;
+            case DUCHESS:
+                duchess(&g);
+                break;
             case NUM_GAMES:
                 help();
                 break;

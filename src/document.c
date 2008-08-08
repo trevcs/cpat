@@ -2,7 +2,7 @@
  *                                                                           *
  * document.c - documentation that can be viewed from within cpat            *
  *                                                                           *
- *            Copyright (C) 2006 Trevor Carey-Smith                          *  
+ *            Copyright (C) 2006 Trevor Carey-Smith                          *
  *                                                                           *
  * This program is free software; you can redistribute it and/or modify it   *
  * under the terms of the GNU General Public License version 2 as published  *
@@ -61,8 +61,8 @@ column 'd' to column 'c' (if there are enough freecells available). \n\
 That's it. Enjoy!!\
 ",0,NULL);
             break;
-    case KLOND:
-        pager("Klondike Rules","\
+        case KLOND:
+            pager("Klondike Rules","\
 To begin 28 cards are dealt face down into 7 columns with 7 cards in \
 the first column, \
 6 cards in the next, 5 in the next and so on down to 1. The bottom card in \
@@ -101,8 +101,8 @@ card is on the top of the destination pile.\n\
 That's it. Enjoy!!\
 ",0,NULL);
             break;
-    case SPIDER:
-        pager("Spider Rules","\
+        case SPIDER:
+            pager("Spider Rules","\
 Two decks of cards are used in this game. To begin 54 cards are dealt face \
 down in 10 columns (6 cards in each of the first 4 columns and 5 for the \
 rest). The bottom card in each column is turned face up. \n\
@@ -140,8 +140,8 @@ column 'd' to column 'c'. \n\
 That's it. Enjoy!!\
 ",0,NULL);
             break;
-    case FORTYTH:
-        pager("40 Thieves Rules","\
+        case FORTYTH:
+            pager("40 Thieves Rules","\
 Two decks of cards are used in this game. To begin 10 columns of 4 cards \
 each are dealt face up (the 40 Thieves).\n\
 \n\
@@ -173,8 +173,8 @@ waste to the appropriate foundation.\n\
 That's it. Enjoy!!\
 ",0,NULL);
             break;
-    case BAKERSD:
-        pager("Baker's Dozen Rules","\
+        case BAKERSD:
+            pager("Baker's Dozen Rules","\
 To begin, a single deck of 52 cards is dealt face up into 13 columns. \
 Each column will contain 4 cards. During the deal, Kings are moved to the \
 bottom of the column they are dealt to.\n\
@@ -198,8 +198,8 @@ Baker's Dozen.\n\
 That's it. Enjoy!!\
 ",0,NULL);
             break;
-    case SCORP:
-        pager("Scorpion Rules","\
+        case SCORP:
+            pager("Scorpion Rules","\
 To begin, using a single deck of 52 cards, 7 cards are dealt into 7 \
 columns. All cards are face up except for the bottom three cards on \
 each of the first three columns. The three remaining cards are left \
@@ -241,8 +241,8 @@ To deal the remaining 3 cards, use the 'oo' command.\n\
 That's it. Enjoy!!\
 ",0,NULL);
             break;
-    case PENGUIN:
-        pager("Penguin Rules","\
+        case PENGUIN:
+            pager("Penguin Rules","\
 To begin, a single deck of 52 cards is dealt face up into 7 \
 columns, each containing 7 cards. The first card that is dealt is known \
 as the beak, and when the (3) other cards of the same rank turn up, they \
@@ -284,8 +284,8 @@ is occupied, this number can be left out.\n\
 That's it. Enjoy!!\
 ",0,NULL);
             break;
-    case YUKON:
-        pager("Yukon Rules","\
+        case YUKON:
+            pager("Yukon Rules","\
 To begin, using a single deck of 52 cards, 28 cards are dealt face down \
 into 7 columns with 7 cards in the first column, \
 6 cards in the next, 5 in the next and so on down to 1. The bottom card in \
@@ -315,9 +315,9 @@ Yukon.\n\
 \n\
 That's it. Enjoy!!\
 ",0,NULL);
-        break;
-    case STRATEGY:
-        pager("Strategy Rules","\
+            break;
+        case STRATEGY:
+            pager("Strategy Rules","\
 To begin, the Aces are removed from a single deck of 52 cards and placed \
 on the foundations. The game is played in two parts, first cards are dealt \
 from the deck onto any of the four tableau columns, irrespective of suit or \
@@ -343,8 +343,9 @@ requested column twice or by preceding that letter with an 'o' \
 \n\
 That's it. Enjoy!!\
 ",0,NULL);
-    case CANFIELD:
-        pager("Canfield Rules","\
+            break;
+        case CANFIELD:
+            pager("Canfield Rules","\
 To begin one card is dealt to a foundation pile and the other 3 foundation \
 piles must begin with a card of this rank. One card is then dealt onto each \
 of the four tableau columns and 13 cards are moved aside into a reserve \
@@ -369,7 +370,38 @@ the '?' key in the main game window).\n\
 \n\
 That's it. Enjoy!!\
 ",0,NULL);
-        break;
+            break;
+        case DUCHESS:
+            pager("Duchess Rules","\
+To begin one card is dealt onto each of the four tableau columns and \
+3 cards are dealt face-up onto each of the four reserve piles. \
+The first move of the game is move a card from one of the reserve piles to \
+a foundation pile. The other 3 foundation piles must begin with a card of \
+this rank. The remaining 36 cards can be dealt one at a time onto the waste \
+and this pile can only be dealt through twice.\n\
+\n\
+The four foundation piles are built up in suit and can wrap from King to \
+Ace. The columns on the tableau are built down by alternating colour and \
+can wrap from Ace to King. Cards can be moved from column to column either \
+singly or as a sequence. When a tableau stack becomes empty, it must be \
+filled with a card from the reserve (not necessarily immediately). \
+If the reserve is empty, an empty tableau \
+stack can only be filled with a card or sequence of cards from another \
+tableau stack (i.e. cards from the waste pile can only be moved directly to \
+a foundation pile or onto an existing card on the tableau).\n\
+\n\
+How to play Duchess:\n\
+\n\
+Duchess is laid out with the tableau columns [a-d] in the centre-left panel, \
+the reserve piles [f-i] in the centre-right panel, the 4 foundation [p]iles \
+on the left and the deck and waste pile on the [o]ther board on the right.\n\
+\n\
+For general instructions on moving cards around see the help text (press \
+the '?' key in the main game window).\n\
+\n\
+That's it. Enjoy!!\
+",0,NULL);
+            break;
     }
 }
 

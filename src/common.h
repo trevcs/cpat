@@ -27,6 +27,7 @@ void foundation_automove(int number,GameInfo* g);
 void roll_deckcards(GameInfo* g);
 int check_sequence(int number,int col,int direction,int type,int wrap,GameInfo* g);
 int check_move(int col,int card,int direction,int type,int wrap,GameInfo* g);
+int find_move(int src,int dst,int direction,int type,int wrap,GameInfo* g);
 int grab_input(GameInfo* g, int* src, int* dst, int* number);
 void printcard(WINDOW *win,int y,int x,int value,GameInfo* g);
 void draw_piles(WINDOW *win, GameInfo* g);

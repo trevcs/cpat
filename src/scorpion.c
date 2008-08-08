@@ -78,42 +78,10 @@ static void play(GameInfo* g)
             /* Here we search to see if there are any cards that can
              * be moved to dst and if so set number so that the stack
              * is moved */
-            if (number==0) 
-            {
-                if (g->col_size[dst] >= 0)
-                {
-                    if (g->cols[dst][g->col_size[dst]]%SUIT_LENGTH==ACE)
-                    {
-                        show_error("Can't move a card onto an Ace.",g->input);
-                        continue;
-                    }
-                    for (i=0;i <= g->col_size[src];i++)
-                        if (g->cols[src][i]==g->cols[dst][g->col_size[dst]]-1)
-                            number=1+g->col_size[src]-i;
-                }
-                else
-                {
-                    j=0;
-                    for (i=0;i <= g->col_size[src];i++)
-                    {
-                        if (g->cols[src][i]%SUIT_LENGTH==KING)
-                        {
-                            number=1+g->col_size[src]-i;
-                            j++;
-                        }
-                    }
-                    if (j>1)
-                    {
-                        show_error("Which King?",g->input);
-                        continue;
-                    }
-                }
-                if (number==0)
-                {
-                    show_error("No card can go there.",g->input);
-                    continue;
-                }
-            }
+            if (number==0)
+                number = find_move(src,dst,DESC,IN_SUIT,NO_WRAP,g);
+            if (number==0)
+                continue;
 
             /* Check if enough cards in stack */
             if (check_sequence(number,src,ANY_ORDER,ANY_SUIT,NO_WRAP,g))

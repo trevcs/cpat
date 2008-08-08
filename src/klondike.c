@@ -80,8 +80,7 @@ static int init_vars(GameInfo* g)
 
 static void play(GameInfo* g)
 {
-    int i,number;
-    int card,color,rank;
+    int number,card;
     int src,dst;
 
     while (g->finished_foundations < g->num_foun)
@@ -107,34 +106,9 @@ static void play(GameInfo* g)
             /* If no number is given we search the column for any possible
              * moves and set number accordingly */
             if (number==0)
-            {
-                if (g->col_size[dst] >= 0)
-                {
-                    if (g->cols[dst][g->col_size[dst]]%SUIT_LENGTH==ACE)
-                    {
-                        show_error("Can't move a card onto an Ace.",g->input);
-                        continue;
-                    }
-                    color = (g->cols[dst][g->col_size[dst]]/SUIT_LENGTH)%2;
-                    rank = g->cols[dst][g->col_size[dst]] % SUIT_LENGTH;
-                    /* Check if suit is correct colour and rank */
-                    for (i=g->col_size[src];i>=0;i--)
-                        if ((g->cols[src][i]/SUIT_LENGTH)%2!=color 
-                                && g->cols[src][i]%SUIT_LENGTH==rank-1)
-                            number=1+g->col_size[src]-i;
-                }
-                else
-                {
-                    for (i=g->col_size[src];i>=0;i--)
-                        if (g->cols[src][i]%SUIT_LENGTH==KING)
-                            number=1+g->col_size[src]-i;
-                }
-                if (number==0)
-                {
-                    show_error("No card can go there.",g->input);
-                    continue;
-                }
-            }
+                number = find_move(src,dst,DESC,ALT_COL,NO_WRAP,g);
+            if (number==0)
+                continue;
 
             if (check_sequence(number,src,ASC,ALT_COL,NO_WRAP,g))
                 continue;

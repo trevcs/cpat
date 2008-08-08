@@ -469,6 +469,80 @@ check_move(int col,int card,int direction,int type,int wrap,GameInfo* g)
     return(0);
 }
 
+/* Finds a valid card move (for some games if n==0 we do this)
+ * src: id of column to move from (0-num_cols-1).
+ * dst: id of column to move to (0-num_cols-1).
+ * direction: ASC or DESC; ASC means its valid to put down a larger card
+ * type: IN_SUIT or ALT_COL
+ * returns 1 for fail.
+ */
+int
+find_move(int src,int dst,int direction,int type,int wrap,GameInfo* g)
+{
+    int i,color,rank;
+    int number=0,count=0;
+
+    if (g->col_size[dst] >= 0)
+    {
+        if (wrap == NO_WRAP)
+        {
+            if (g->cols[dst][g->col_size[dst]]%SUIT_LENGTH
+                    == (direction==ASC?KING:ACE))
+            {
+                show_error("Can't move a card onto that column.",g->input);
+                return 0;
+            }
+        }
+        color = (g->cols[dst][g->col_size[dst]]/SUIT_LENGTH)%2;
+        rank = g->cols[dst][g->col_size[dst]] % SUIT_LENGTH;
+        /* Check if suit is correct colour and rank */
+        if (type == IN_SUIT)
+        {
+            for (i=0;i <= g->col_size[src];i++)
+            {
+                if (g->cols[src][i] == 
+                        g->cols[dst][g->col_size[dst]]+(direction==ASC?1:-1))
+                {
+                    number=1+g->col_size[src]-i;
+                    count++;
+                }
+            }
+        }
+        else if (type == ALT_COL)
+        {
+            for (i=g->col_size[src];i>=0;i--)
+            {
+                if (g->cols[src][i]%SUIT_LENGTH==rank+(direction==ASC?1:-1)
+                        && (g->cols[src][i]/SUIT_LENGTH)%2!=color)
+                {
+                    number=1+g->col_size[src]-i;
+                    count++;
+                }
+            }
+        }
+    }
+    else
+    {
+        for (i=g->col_size[src];i>=0;i--)
+        {
+            if (wrap == WRAP ||
+                    g->cols[src][i]%SUIT_LENGTH==(direction==ASC?ACE:KING))
+            {
+                number=1+g->col_size[src]-i;
+                count++;
+            }
+        }
+    }
+    if (number==0)
+        show_error("No card can go there.",g->input);
+    if (count > 1)
+    {
+        show_error("Which card do you want to move?",g->input);
+        number = 0;
+    }
+    return number;
+}
+
 /* This is called if grab_input() returns 1 or the game is won.
  * game_str should contain game stats to display.
  * The function returns 1 if the user decides not to quit - this is
@@ -623,6 +697,9 @@ draw_piles(WINDOW *win, GameInfo* g)
 
             /* Reset print switch */
             g->print_col[col]=0;
+            /* Redo the separator line if printing the column beside it */
+            if (col+1 < g->num_cols && g->col_size[col+1]==CARDSEPARATOR)
+                g->print_col[col+1]=1;
 
             getmaxyx(g->main,maxy,maxx);
             /* First clear the column (-3 for borders and letter) */
@@ -632,11 +709,26 @@ draw_piles(WINDOW *win, GameInfo* g)
                 printcard(win,row,col*CARD_WIDTH+2, CARDSPACE,g);
             }
             if (col==g->num_cols-1)
-                box(win, 0, 0);
+                (void) mvwvline(win,1,maxx-1,ACS_VLINE,maxy-2);
 
             if (g->col_size[col]==NOCARD)
                 /* No cards to print */
                 continue;
+            else if (g->col_size[col]==CARDSEPARATOR)
+            {
+                (void) mvwvline(win,0,col*CARD_WIDTH+1,ACS_URCORNER,1);
+                (void) mvwvline(win,1,col*CARD_WIDTH+1,ACS_VLINE,maxy-2);
+                (void) mvwvline(win,maxy-1,col*CARD_WIDTH+1,ACS_LRCORNER,1);
+                wattron(win,A_REVERSE | COLOR_PAIR(SPADES_COLOR));
+                (void) mvwvline(win,0,col*CARD_WIDTH+2,' ',maxy);
+                (void) mvwvline(win,0,col*CARD_WIDTH+3,' ',maxy);
+                (void) mvwvline(win,0,col*CARD_WIDTH+4,' ',maxy);
+                wattrset(win,A_NORMAL);
+                (void) mvwvline(win,0,col*CARD_WIDTH+5,ACS_ULCORNER,1);
+                (void) mvwvline(win,1,col*CARD_WIDTH+5,ACS_VLINE,maxy-2);
+                (void) mvwvline(win,maxy-1,col*CARD_WIDTH+5,ACS_LLCORNER,1);
+                continue;
+            }
             else if (g->col_size[col]>=maxy-3)
                 /* This is if sequences need to be collapsed */
             {
@@ -666,8 +758,10 @@ draw_piles(WINDOW *win, GameInfo* g)
                     temp_card=g->cols[col][row];
                 }
                 temp_col[num_rows]=temp_card;
+                /*
                 if (num_rows>=maxy-3)
                     show_error("Too many cards in column.",g->input);
+                    */
             }
             else
                 /* Don't need to collapse, just copy */
@@ -859,6 +953,8 @@ move_card(int src,int dst,int number,GameInfo* g)
                 suit=g->foundation[src-g->num_cols-g->num_free]/SUIT_LENGTH;
                 g->foundation[src-g->num_cols-g->num_free] +=
                         (g->foun_dir==DESC)?1:-1;
+                if (g->foundation[src-g->num_cols-g->num_free] < 0)
+                    g->foundation[src-g->num_cols-g->num_free] += SUIT_LENGTH;
                 if (g->foundation[src-g->num_cols-g->num_free]/SUIT_LENGTH!=suit)
                     g->foundation[src-g->num_cols-g->num_free] += 
                         SUIT_LENGTH*((g->foun_dir==DESC)?-1:1);
@@ -911,7 +1007,8 @@ undo_move(GameInfo* g)
         show_error("No more undo's left.",g->input);
     else
     {
-        if (g->allow_undo==0 && g->undo->type!=UNDO_NORMAL) 
+        if (g->allow_undo == 0 && g->undo->type != UNDO_NORMAL
+                && g->undo->type != UNDO_FOUN_START)
         {
             show_error("Not allowed to undo that move.",g->input);
             return;
@@ -921,6 +1018,8 @@ undo_move(GameInfo* g)
             show_error("Can't undo that move.",g->input);
             return;
         }
+        else if (g->undo->type == UNDO_FOUN_START)
+            g->foun_start = -1;
         else if (g->undo->type == UNDO_FACE_DOWN)
             g->cols[g->undo->src][g->col_size[g->undo->src]]-=FACE_DOWN;
         else if (g->undo->type == UNDO_DISCARD)
