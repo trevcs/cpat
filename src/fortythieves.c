@@ -21,6 +21,29 @@ static void
 init_vars(GameInfo* g)
 {
     int i;
+    int num_items[1] = {3};
+    char title[40];
+    char *queries[1] = {"Choose normal or easy:"};
+    char *items[3] = {
+        "normal",
+        "easy (sequence moves allowed)",
+        "return to main menu"
+    };
+
+    snprintf(title,40,"Welcome to %s",names[g->game]);
+
+    g->variation=menu(title,queries,1,items,num_items,items,0);
+    switch(g->variation)
+    {
+        case 0:
+            g->seq_moves=0;
+            break;
+        case 1:
+            g->seq_moves=1;
+            break;
+        case 2:
+            return 1;
+    }
 
     /* game specific variables */
     g->num_cols=10;
@@ -59,7 +82,7 @@ init_vars(GameInfo* g)
 
 /* Main game loop. Contains rules that describe what moves are allowed and
  * what to do with given move commands. */
-static void 
+static void
 play(GameInfo* g)
 {
     int j,number;
@@ -76,19 +99,23 @@ play(GameInfo* g)
         if (grab_input(g,&src, &dst, &number))
             break;  /* quit game */
 
-        if (src<=NOCARD) 
+        if (src<=NOCARD)
             continue;
         else if (src < g->num_cols)
         {
+            /* We want to move at least one card */
+            if (number==0) number=1;
             /* Can't move multiple cards to normal columns*/
-            /* and we want to move at least one card */
-            if (dst<g->num_cols || number==0) number=1; 
+            if (g->seq_moves == 0 && dst < g->num_cols) number=1;
 
             /* Check if stack to move is big enough and in suit order */
             if (check_sequence(number,src,ASC,IN_SUIT,NO_WRAP,g))
-                    continue;
+                continue;
 
-            card=g->cols[src][g->col_size[src]];
+            if (dst < g->num_cols)
+                card=g->cols[src][g->col_size[src]-number+1];
+            else
+                card=g->cols[src][g->col_size[src]];
         }
         else if (src < g->num_cols+g->num_free)
         {
@@ -124,7 +151,7 @@ play(GameInfo* g)
         if (dst==NOCARD)
             continue;
         /* Next check if card can move there */
-        else if (dst < g->num_cols) 
+        else if (dst < g->num_cols)
         {
             /* Allowed to move any card to vacant pile */
             if (g->col_size[dst] >= 0)
@@ -145,16 +172,21 @@ play(GameInfo* g)
         }
 
         /* now do move(s) */
-        for (j=0;j<number;j++)
+        if (dst < g->num_cols+g->num_free)
+            move_card(src,dst,number,g);
+        else
         {
-            if (j) nanosleep(&pauselength,&pauseleft);
-            move_card(src,dst,1,g);
+            for (j=0;j<number;j++)
+            {
+                if (j) nanosleep(&pauselength,&pauseleft);
+                move_card(src,dst,1,g);
+            }
         }
     }
 }
 
 /* freecell wrapper functions */
-void 
+void
 fortythieves(GameInfo* g)
 {
     int carry_on=2;

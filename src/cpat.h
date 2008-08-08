@@ -192,6 +192,7 @@ typedef struct {
     int foun_start;
     int allow_undo;
     int variation; /* records what variation of the game is being played */
+    int seq_moves; /* Whether to allow sequence moves or not */
 
     /* To notify draw_piles() which columns to draw */
     int print_col[MAX_NUM_COLS]; 
@@ -234,7 +235,7 @@ static char *variations[NUM_GAMES][MAX_VARIATIONS] =
         {"3 freecells","4 freecells","5 freecells",""},
         {"3 cards/deal","1 card/deal","",""},
         {"","","",""},
-        {"","","",""},
+        {"normal","easy","",""},
         {"","","",""},
         {"","","",""},
         {"","","",""},
