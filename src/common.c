@@ -19,8 +19,8 @@
 int 
 create_windows(GameInfo* g)
 {
-    int freepile_x,freepile_h,freepile_w;
-    int founpile_h,founpile_w;
+    int freepile_y,freepile_x,freepile_h,freepile_w;
+    int founpile_y,founpile_h,founpile_w;
     int main_y,main_x,main_h,main_w;
     int input_x,input_y,input_h,input_w;
     int hint_x,hint_y,hint_w;
@@ -31,12 +31,14 @@ create_windows(GameInfo* g)
     input_h = 5;
     input_w = 15;
  
+    founpile_y = PILE_Y;
     founpile_h = (g->num_foun) ? g->num_foun*CARD_HEIGHT+2*BORDER+1 : 0;
     founpile_w = (g->num_foun) ? CARD_WIDTH+2*BORDER : 0;
     main_w = g->num_cols*CARD_WIDTH+2*BORDER;
     main_h = LINES-BOARD_Y-1;
     main_x = PILE_X+founpile_w+(g->num_foun?SPACE:0);
     main_y = BOARD_Y;
+    freepile_y = PILE_Y;
     /* horiz coordinate of left side of freeboard (board to the
      * right of the main board */
     freepile_x = main_x+main_w+SPACE;
@@ -45,8 +47,17 @@ create_windows(GameInfo* g)
     freepile_w = (g->num_free) ? CARD_WIDTH+2*BORDER : 0;
 
     /* Check if screen size big enough */
-    max_x = freepile_x+freepile_w;
     max_y = PILE_Y + ((freepile_h > founpile_h) ? freepile_h : founpile_h);
+    max_x = freepile_x+freepile_w;
+    /* Try putting freepile below founpile */
+    if (max_x > COLS && g->num_foun && g->num_free)
+    {
+        founpile_y = BOARD_Y;
+        freepile_x = PILE_X;
+        freepile_y = BOARD_Y + founpile_h + SPACE;
+        max_x = main_x+main_w;
+        max_y = freepile_y+freepile_h;
+    }
     if (max_x > COLS || max_y > LINES)
     {
         clear();
@@ -58,8 +69,20 @@ create_windows(GameInfo* g)
     hint_x = freepile_x + freepile_w + (g->num_free?SPACE:0);
     hint_y = PILE_Y;
     input_x = freepile_x;
+    /* If freepile below founpile, put some hints below mainboard */
+    if (freepile_x == PILE_X)
+    {
+        hint_x = main_x;
+        hint_w = main_w;
+        g->hint_h = 1;
+        main_h -= 2;
+        hint_y = main_y+main_h+SPACE;
+        /* try putting input at bottom on right of main board */
+        input_y = BOARD_Y;
+        input_x = main_x+main_w+SPACE;
+    }
     /* If no room on right of boards, put hints below the freepile board */
-    if (COLS - hint_x < hint_w)
+    else if (COLS - hint_x < hint_w)
     {
         hint_x = freepile_x;
         hint_y = PILE_Y+freepile_h+SPACE;
@@ -102,9 +125,7 @@ create_windows(GameInfo* g)
                 input_y = hint_y+g->hint_h+SPACE;
                 input_x = hint_x;
             }
-            
         }
-
     }
 
     if (input_w < COLS-input_x-SPACE)
@@ -122,9 +143,11 @@ create_windows(GameInfo* g)
     }
     
     /* Now create windows */
-    if (g->num_foun) g->found = newwin(founpile_h,founpile_w,PILE_Y,PILE_X);
+    if (g->num_foun)
+        g->found = newwin(founpile_h,founpile_w,founpile_y,PILE_X);
     g->main = newwin(main_h,main_w,main_y,main_x);
-    if (g->num_free) g->free = newwin(freepile_h,freepile_w,PILE_Y,freepile_x);
+    if (g->num_free)
+        g->free = newwin(freepile_h,freepile_w,freepile_y,freepile_x);
     g->hint = newwin(g->hint_h,hint_w,hint_y,hint_x);
     g->input = newwin(input_h,input_w,input_y,input_x);
 
