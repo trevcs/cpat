@@ -13,11 +13,11 @@
 #include "cpat.h"
 #include "common.h"
 
-static void init_vars(GameInfo* g);
+static int init_vars(GameInfo* g);
 static void play(GameInfo* g);
 
 /* Initialise variables for current game */
-static void
+static int
 init_vars(GameInfo* g)
 {
     int i;
@@ -78,6 +78,7 @@ init_vars(GameInfo* g)
     g->moves=0;
     g->deals=0;
     g->finished_foundations=0;
+    return 0;
 }
 
 /* Main game loop. Contains rules that describe what moves are allowed and
@@ -194,7 +195,8 @@ fortythieves(GameInfo* g)
 
     while (carry_on)
     {
-        if (carry_on==2) init_vars(g);
+        if (carry_on==2)
+            if (init_vars(g)) return;
         if (create_windows(g)) return;
         draw_screen(g);
         play(g);
