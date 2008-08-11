@@ -840,6 +840,7 @@ draw_screen(GameInfo* g)
     (void)printw( "%s\n", PACKAGE_STRING);
     attroff(A_BOLD);
     refresh();
+    xtermtitle(names[g->game]);
 
     init_hints(g->hint,g);
     if (g->num_free) init_board(g->free,g);

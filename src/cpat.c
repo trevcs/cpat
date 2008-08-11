@@ -72,6 +72,20 @@ void clear_undo(GameInfo* g)
     while (g->undo != NULL) g->undo = pop_items(g->undo);
 }
 
+void xtermtitle(char *text)
+{
+    char *term = getenv("TERM") ? getenv("TERM") : "";
+    char *char_p;
+    
+    if (!strncmp(term,"xterm",5) || !strncmp(term,"Eterm",5) || !strncmp(term,"aterm",5) || !strncmp(term,"rxvt",4) || !strncmp(term,"screen",6))
+    {
+        char_p = (char *) malloc (strlen(text)+30);
+        snprintf(char_p,strlen(text)+30,"\x1b]1;\x07\x1b]2;cpat: %s\x07",text);
+        putp(char_p);
+        free(char_p);
+    }
+}
+
 /* Creates windows to write stuff not in a game */
 void
 pager(char *title,char* text,int num_phrases, char **phrases)
@@ -104,6 +118,7 @@ q                    Exit pager";
     /* Add title and header lines */
     wattron(outer,A_UNDERLINE);
     mvwprintw(outer,2,4,title);
+    xtermtitle(title);
     wattroff(outer,A_UNDERLINE);
     for (i = 0;i < num_phrases;i++) mvwprintw(outer,4+i,4,phrases[i]);
     wrefresh(outer);
@@ -319,6 +334,7 @@ menu(char *title,char **queries,int num_queries,
 
     wattron(outer,A_UNDERLINE);
     mvwprintw(outer,title_y,4,title);
+    xtermtitle(title);
     wattroff(outer,A_UNDERLINE);
     for (i = 0;i < num_phrases;i++) 
         mvwprintw(outer,phrases_y+i,6,phrases[i]);

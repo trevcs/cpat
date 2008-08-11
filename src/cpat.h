@@ -266,6 +266,7 @@ void canfield(GameInfo* g);
 void duchess(GameInfo* g);
 
 void die(int onsig);
+void xtermtitle(char *text);
 
 #endif /* !CPAT_CPAT_H */
 /* cpat.h ends here */
