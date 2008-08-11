@@ -359,7 +359,7 @@ roll_deckcards(GameInfo* g)
 int
 check_sequence(int number,int col,int direction,int type,int wrap,GameInfo* g)
 {
-    int rank,rank2,suit,color,j;
+    int rank,card,suit,j;
 
     /* Check if enough cards in column */
     if (g->col_size[col] < number-1 || 
@@ -370,48 +370,20 @@ check_sequence(int number,int col,int direction,int type,int wrap,GameInfo* g)
         return(1);
     }
 
-    /* First check for rank order */
-    if (direction!=ANY_ORDER)
-    {   
-        for (j=1; j < number; j++)
-        {
-            rank = g->cols[col][g->col_size[col]-j+1] % SUIT_LENGTH;
-            rank2 = g->cols[col][g->col_size[col]-j] % SUIT_LENGTH;
-            if (rank2 != ((direction==ASC) ? rank+1 : rank-1))
-            {
-                if (wrap==WRAP &&
-                        (rank2+(SUIT_LENGTH-1)*((direction==ASC)?1:-1)==rank))
-                    continue;
-                show_error("Stack not in rank order.",g->input);
-                return(1);
-            }
-        }
-    }
-
-    /* Check if stack to move is in suit order */
-    if (type == IN_SUIT)
+    /* Check sequence */
+    suit = g->cols[col][g->col_size[col]] / SUIT_LENGTH;
+    for (j=1; j < number; j++)
     {
-        suit = g->cols[col][g->col_size[col]] / SUIT_LENGTH;
-        for (j=1; j < number; j++)
+        card = g->cols[col][g->col_size[col]-j];
+        rank=g->cols[col][g->col_size[col]-j+1]%SUIT_LENGTH+(direction==ASC?1:-1);
+        if (wrap == WRAP)
+            rank = rank < ACE ? KING : (rank > KING ? ACE : rank);
+        if ((direction!=ANY_ORDER && card % SUIT_LENGTH != rank)
+                || (type == IN_SUIT && card/SUIT_LENGTH!=suit)
+                || (type == ALT_COL && (card/SUIT_LENGTH)%2!=(suit+j)%2))
         {
-            if (g->cols[col][g->col_size[col]-j]/SUIT_LENGTH!=suit)
-            {
-                show_error("Stack not in proper sequence.",g->input);
-                return(1);
-            }
-        }
-    }
-    else if (type == ALT_COL)
-    {
-        /* Check if stack to move is rbrbr */
-        color = (g->cols[col][g->col_size[col]] / SUIT_LENGTH)%2;
-        for (j=1; j < number; j++)
-        {
-            if ((g->cols[col][g->col_size[col]-j]/SUIT_LENGTH)%2!=(color+j)%2)
-            {
-                show_error("Stack not in proper sequence.",g->input);
-                return(1);
-            }
+            show_error("Stack not in correct sequence.",g->input);
+            return(1);
         }
     }
     return(0);
@@ -448,42 +420,17 @@ check_move(int col,int card,int direction,int type,int wrap,GameInfo* g)
             show_error("Bad move.",g->input);
             return(1);
         }
-        else return(0);
     }
-    
-    /* Now check for cards moving to tableau columns */
-    rank = card % SUIT_LENGTH;
-    /* First check for rank order */
-    if ((g->cols[col][g->col_size[col]] % SUIT_LENGTH) != 
-            ((direction==DESC) ? rank+1 : rank-1))
+    else
     {
-        if (wrap==WRAP)
-        {
-            if ((g->cols[col][g->col_size[col]]%SUIT_LENGTH)+
-                    ((direction==DESC)?SUIT_LENGTH-1:1-SUIT_LENGTH) != rank)
-            {
-                show_error("Can't move card there.",g->input);
-                return(1);
-            }
-        }
-        else
-        {
-            show_error("Can't move card there.",g->input);
-            return(1);
-        }
-    }
-
-    if (type == IN_SUIT)
-    {
-        if ((g->cols[col][g->col_size[col]]/SUIT_LENGTH) != card/SUIT_LENGTH)
-        {
-            show_error("Can't move card there.",g->input);
-            return(1);
-        }
-    }
-    else if (type == ALT_COL)
-    {
-        if ((g->cols[col][g->col_size[col]]/SUIT_LENGTH)%2==card/SUIT_LENGTH%2)
+        suit = g->cols[col][g->col_size[col]]/SUIT_LENGTH; //card / SUIT_LENGTH;
+        rank = (card % SUIT_LENGTH)+(direction==DESC?1:-1);
+        if (wrap == WRAP)
+            rank = rank < ACE ? KING : (rank > KING ? ACE : rank);
+        /* Check if suit is correct colour and rank */
+        if (g->cols[col][g->col_size[col]]%SUIT_LENGTH!=rank
+                || (type==ALT_COL && suit%2==(card/SUIT_LENGTH)%2)
+                || (type==IN_SUIT && suit!=card/SUIT_LENGTH))
         {
             show_error("Can't move card there.",g->input);
             return(1);
@@ -502,7 +449,7 @@ check_move(int col,int card,int direction,int type,int wrap,GameInfo* g)
 int
 find_move(int src,int dst,int direction,int type,int wrap,GameInfo* g)
 {
-    int i,color,rank;
+    int i,rank,suit;
     int number=0,count=0;
 
     if (g->col_size[dst] >= 0)
@@ -516,31 +463,21 @@ find_move(int src,int dst,int direction,int type,int wrap,GameInfo* g)
                 return 0;
             }
         }
-        color = (g->cols[dst][g->col_size[dst]]/SUIT_LENGTH)%2;
-        rank = g->cols[dst][g->col_size[dst]] % SUIT_LENGTH;
+        suit = g->cols[dst][g->col_size[dst]] / SUIT_LENGTH;
+        rank = g->cols[dst][g->col_size[dst]]%SUIT_LENGTH+(direction==ASC?1:-1);
+        if (wrap == WRAP)
+            rank = rank < ACE ? KING : (rank > KING ? ACE : rank);
         /* Check if suit is correct colour and rank */
-        if (type == IN_SUIT)
+        for (i=g->col_size[src];i>=0;i--)
         {
-            for (i=0;i <= g->col_size[src];i++)
+            if (g->cols[src][i]%SUIT_LENGTH==rank &&
+                    ((type==ALT_COL && (g->cols[src][i]/SUIT_LENGTH)%2!=suit%2)
+                     ||(type==IN_SUIT && g->cols[src][i]/SUIT_LENGTH==suit)))
             {
-                if (g->cols[src][i] == 
-                        g->cols[dst][g->col_size[dst]]+(direction==ASC?1:-1))
-                {
-                    number=1+g->col_size[src]-i;
-                    count++;
-                }
-            }
-        }
-        else if (type == ALT_COL)
-        {
-            for (i=g->col_size[src];i>=0;i--)
-            {
-                if (g->cols[src][i]%SUIT_LENGTH==rank+(direction==ASC?1:-1)
-                        && (g->cols[src][i]/SUIT_LENGTH)%2!=color)
-                {
-                    number=1+g->col_size[src]-i;
-                    count++;
-                }
+                number = 1+g->col_size[src]-i;
+                /* If moving one card is valid do that */
+                if (number == 1) break;
+                count++;
             }
         }
     }
