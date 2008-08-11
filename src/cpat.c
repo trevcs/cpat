@@ -35,6 +35,7 @@ die(int onsig)
     if (hs.available) write_hs();
     signal(onsig, SIG_IGN);
     endwin();
+    xtermtitle("");
     exit(0);
 }
 
@@ -71,18 +72,21 @@ void clear_undo(GameInfo* g)
     /* Clean up all the undo levels */
     while (g->undo != NULL) g->undo = pop_items(g->undo);
 }
-
+/* Prints given string in xterm title bar. If NULL string given prints
+ * value of TERM env variable instead. */
 void xtermtitle(char *text)
 {
     char *term = getenv("TERM") ? getenv("TERM") : "";
-    char *char_p;
+    char *p;
+    int l;
     
     if (!strncmp(term,"xterm",5) || !strncmp(term,"Eterm",5) || !strncmp(term,"aterm",5) || !strncmp(term,"rxvt",4) || !strncmp(term,"screen",6))
     {
-        char_p = (char *) malloc (strlen(text)+30);
-        snprintf(char_p,strlen(text)+30,"\x1b]1;\x07\x1b]2;cpat: %s\x07",text);
-        putp(char_p);
-        free(char_p);
+        l = strlen(text)+30;
+        p = (char *) malloc (l);
+        snprintf(p,l,"\x1b]1;\x07\x1b]2;%s%s\x07",(l>30?"cpat: ":term),text);
+        putp(p);
+        free(p);
     }
 }
 
