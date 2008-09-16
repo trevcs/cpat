@@ -161,8 +161,7 @@ typedef long time_t;
 #define UNDO_FOUN_START 6
 #define UNDO_IMPOSSIBLE 7
 
-typedef struct undo_node
-{
+typedef struct undo_node {
     int number,src,dst;
     int type;
     struct undo_node * nextnode;

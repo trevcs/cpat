@@ -98,7 +98,7 @@ pager(char *title,char* text,int num_phrases, char **phrases)
     int win_w,win_h;
     int i,line,max_line,prev_line;
     char *char_p,**start_line,**end_line;
-    char *help = "Pager Help:\n\n\
+    char *pagerhelp = "Pager Help:\n\n\
 <Up>,<BackSpace>,k   Scroll back one line\n\
 <Down>,<Enter>,j     Scroll forward one line\n\
 <PageUp>,p           Scroll back one page\n\
@@ -226,7 +226,7 @@ q                    Exit pager";
                     break;
                 case '?': case 'h':
                     wclear(input);
-                    mvwprintw(input,0,0,help);
+                    mvwprintw(input,0,0,pagerhelp);
                     wattron(input,A_REVERSE);
                     mvwprintw(input,win_h-1,win_w-18," Press any key...");
                     wattroff(input,A_REVERSE);
@@ -280,7 +280,7 @@ menu(char *title,char **queries,int num_queries,
     }
 
     for (i = 0;i < total_items;i++)
-        if (strlen(items[i])>name_len)
+        if ((int)strlen(items[i])>name_len)
             name_len = strlen(items[i]);
 
     /* First make adjustments to width of windows */
@@ -398,14 +398,21 @@ main(int argc, char **argv, char *envp[])
     int  version_flag = 0;
     int  error_flag = 0;
     int  fast_flag = 1;
+    const char *prog_name;
+
+    char *items[NUM_GAMES+5] = {
+        "Help","Credits","License","Game Stats","High Scores"
+    };
+    char *queries[2] = {"Choose a game","or an option:"};
+    int num_items[2] = {NUM_GAMES,5};
+
+    GameInfo g;
 
     hs.available=TRUE;
 
-    GameInfo g;
     g.debug = 0;
     g.allow_undo = 0;
     g.undo = NULL;
-    const char *prog_name;
     
     g.seed = (int)time((time_t *)0);
 
@@ -512,12 +519,6 @@ main(int argc, char **argv, char *envp[])
     nonl();
     noecho();
 //    intrflush(stdscr,FALSE);
-
-    char *items[NUM_GAMES+5] = {
-        "Help","Credits","License","Game Stats","High Scores"
-    };
-    char *queries[2] = {"Choose a game","or an option:"};
-    int num_items[2] = {NUM_GAMES,5};
 
     for (i = 0;i < 5;i++) items[i+NUM_GAMES] = items[i];
     for (i = 0;i < NUM_GAMES;i++) items[i] = names[i];

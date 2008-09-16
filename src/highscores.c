@@ -160,10 +160,10 @@ game_stats(int type)
             if ((type==0 && hs.total_games[i][j]>0) || 
                     (type==1 && hs.finished_games[i][j]>0))
                 num_lines++;
-            if (strlen(variations[i][j])>variation_len)
+            if ((int)strlen(variations[i][j])>variation_len)
                 variation_len=strlen(variations[i][j]);
         }
-        if (strlen(names[i])>name_len)
+        if ((int)strlen(names[i])>name_len)
             name_len=strlen(names[i]);
     }
 
