@@ -595,19 +595,19 @@ printcard(WINDOW *win,int y,int x,int value,GameInfo* g)
     {
         wattron(win,A_REVERSE | COLOR_PAIR(BACK_COLOR));
         if (value==CARDBACK)
-            (void) wprintw(win,"%3d",g->face_down);
+            (void) wprintw(win,"%*d",CARD_WIDTH-2,g->face_down);
         else if (value==CARDRESERVE)
-            (void) wprintw(win,"%3d",g->col_size[g->num_cols]+1);
+            (void) wprintw(win,"%*d",CARD_WIDTH-2,g->col_size[g->num_cols]+1);
         else
-            (void) waddstr(win,"   ");
+            (void) wprintw(win,"%*c",CARD_WIDTH-2,' ');
     }
     else if (value == NOCARD)
     {
         wattron(win,A_REVERSE | COLOR_PAIR(SPADES_COLOR));
-        (void) waddstr(win,"   ");
+        (void) wprintw(win,"%*c",CARD_WIDTH-2,' ');
     }
     else if (value == CARDSPACE)
-        (void) waddstr(win,"   ");
+        (void) wprintw(win,"%*c",CARD_WIDTH-2,' ');
     else if (value == CARDSEQR)
     {
         wattron(win,A_REVERSE | COLOR_PAIR(HEARTS_COLOR));
