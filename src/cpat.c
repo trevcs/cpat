@@ -96,20 +96,13 @@ pager(char *title,char* text,int num_phrases, char **phrases)
 {
     WINDOW *outer,*input;
     int win_w,win_h;
+    int show_help = 1;
     int i,line,max_line,prev_line;
     char *char_p,**start_line,**end_line;
-    char *pagerhelp = "Pager Help:\n\n\
-<Up>,<BackSpace>,k   Scroll back one line\n\
-<Down>,<Enter>,j     Scroll forward one line\n\
-<PageUp>,p           Scroll back one page\n\
-<PageDown>,n,<Space> Scroll forward one page\n\
-u                    Scroll back half a page\n\
-d                    Scroll forward half a page\n\
-<Home>               Jump to start of text\n\
-<End>                Jump to end of text\n\
-?,h                  Show this help\n\
-q                    Exit pager";
 
+    /* num_phrases should be set to -1 if pager has been called
+     * to show its own help page. */
+    if (num_phrases < 0) show_help = num_phrases = 0;
 
     /* Values for outer window */
     win_w = COLS-8;
@@ -225,13 +218,25 @@ q                    Exit pager";
                     prev_line = -2; /* force page refresh and quit */
                     break;
                 case '?': case 'h':
-                    wclear(input);
-                    mvwprintw(input,0,0,pagerhelp);
-                    wattron(input,A_REVERSE);
-                    mvwprintw(input,win_h-1,win_w-18," Press any key...");
-                    wattroff(input,A_REVERSE);
-                    wrefresh(input);
-                    wgetch(input);
+                    if (!show_help) break;
+                    pager("Pager Help","\
+<Up>,<BackSpace>,k   Scroll back one line\n\
+<Down>,<Enter>,j     Scroll forward one line\n\
+<PageUp>,p           Scroll back one page\n\
+<PageDown>,n,<Space> Scroll forward one page\n\
+u                    Scroll back half a page\n\
+d                    Scroll forward half a page\n\
+<Home>               Jump to start of text\n\
+<End>                Jump to end of text\n\
+?,h                  Show this help\n\
+q                    Exit pager",-1,NULL);
+                    box(outer,0,0);
+                    wattron(outer,A_UNDERLINE);
+                    mvwprintw(outer,2,4,title);
+                    xtermtitle(title);
+                    wattroff(outer,A_UNDERLINE);
+                    for (i = 0;i < num_phrases;i++) mvwprintw(outer,4+i,4,phrases[i]);
+                    wrefresh(outer);
                     prev_line = -1; /* force page refresh */
                     break;
             }

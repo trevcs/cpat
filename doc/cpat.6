@@ -6,7 +6,7 @@
 cpat \- a curses-based solitaire game
 .SH SYNOPSIS
 .B cpat 
-.RB [ \-hfcV ]
+.RB [ \-hfRcV ]
 .RB [ \-s
 .IR seed ]
 .SH DESCRIPTION
@@ -47,10 +47,10 @@ When playing a solitaire game, a number of commands are available at all
 times:
 .TP
 .B '?'
-Will print some help details similar to what you are reading now.
+Will display some help details similar to what you are reading now.
 .TP
 .B 'r'
-Will print the rules of the current game.
+Will display the rules of the current game.
 .TP
 .B 'u'
 Will undo the previous move if this is allowed. You can undo only those moves 
@@ -58,10 +58,10 @@ that do not reveal any new information (e.g. moving cards from one column to
 another).
 .TP
 .B 't'
-Will show credit where it is due.
+Will display credit where it is due.
 .TP
 .B 'w'
-Will print license and warranty information.
+Will display license and warranty information.
 .TP
 .B 's'
 Will redraw the screen from scratch, in case something goes wrong with
@@ -95,7 +95,7 @@ you are allowed to move depends on the game you are playing.
 .PP
 The 'o' command is used to manipulate cards on the "other" board. This 
 will depend on the game you are playing. In Klondike type games where 
-there is a deck of cards to look through, two 'o' characters command will turn 
+there is a deck of cards to look through, two 'o' characters will turn
 cards over onto the waste pile and an 'o' followed by another letter will 
 move a card off the waste pile. In Freecell type games, the "other" board 
 contains the freecells and cards can be moved to and from these piles in the 
