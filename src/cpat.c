@@ -388,6 +388,8 @@ main(int argc, char **argv, char *envp[])
         { "seed", required_argument, 0, 's' },
         { "no-record", no_argument, 0, 'R' },
         { "help", no_argument, 0, 'h' },
+        { "print", no_argument, 0, 'p' },
+        { "best", no_argument, 0, 'b' },
         { "fast", no_argument, 0, 'f' },
         { "cheat", no_argument, 0, 'c' },
         { "debug", no_argument, 0, 'd' },
@@ -396,13 +398,15 @@ main(int argc, char **argv, char *envp[])
     };
 #endif
     char title[40];
-    char *short_options="s:RdfchV";
+    char *short_options="s:RdfchVpb";
     char *home;
     int i;
     int  help_flag = 0;
     int  version_flag = 0;
     int  error_flag = 0;
     int  fast_flag = 1;
+    int  print_stats = 0;
+    int  print_best = 0;
     const char *prog_name;
 
     char *items[NUM_GAMES+5] = {
@@ -456,6 +460,12 @@ main(int argc, char **argv, char *envp[])
             case 'f':
                 fast_flag*=2;
                 break;
+            case 'b':
+                print_best = 1;
+                break;
+            case 'p':
+                print_stats = 1;
+                break;
             case 'V':
                 version_flag = 1;
                 break;
@@ -485,6 +495,8 @@ main(int argc, char **argv, char *envp[])
         fputs (P("-f","    ","--fast     ") "for faster auto-moves\n", out);
         fputs (P("-s","SEED","--seed=SEED") "seed for the deck shuffle\n", out);
         fputs (P("-R","    ","--no-record") "do not record game stats\n", out);
+        fputs (P("-p","    ","--print    ") "print game statistics\n", out);
+        fputs (P("-b","    ","--best     ") "print best scores\n", out);
         fputs (P("-c","    ","--cheat    ") "allow undo for all moves\n", out);
         fputs (P("-V","    ","--version  ") "print the version number\n", out);
         fputs ("\nPlease report bugs to " PACKAGE_BUGREPORT ".\n", out);
@@ -508,6 +520,17 @@ main(int argc, char **argv, char *envp[])
 
         initialise_hs();
         read_hs();
+    }
+
+    if (print_best)
+    {
+        game_stats(1,1);
+        exit(0);
+    }
+    else if (print_stats)
+    {
+        game_stats(0,1);
+        exit(0);
     }
 
     pauselength.tv_nsec= PAUSETIME*1000000/fast_flag;
@@ -579,10 +602,10 @@ main(int argc, char **argv, char *envp[])
                 license();
                 break;
             case NUM_GAMES+3:
-                game_stats(0);
+                game_stats(0,0);
                 break;
             case NUM_GAMES+4:
-                game_stats(1);
+                game_stats(1,0);
                 break;
         }
         srand(++g.seed);

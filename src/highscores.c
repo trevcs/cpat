@@ -138,7 +138,7 @@ read_hs(void)
 }
 
 void 
-game_stats(int type)
+game_stats(int type,int docat)
 {
 //    char string[NUM_GAMES*MAX_VARIATIONS*200]; /* this will contain the scores*/
     char *string;
@@ -236,9 +236,17 @@ game_stats(int type)
             }
         }
     }
-
-    /* Print highscore table for all games */
-    pager(type==0?"Game Statistics":"High Scores",string,2,header);
+    if (docat==1) {
+        fprintf(stdout,"%s: %s\n\n",PACKAGE_STRING,type==0?"Game Statistics":"High Scores");
+        fprintf(stdout,"%s\n",header[0]);
+        fprintf(stdout,"%s\n",header[1]);
+        fprintf(stdout,"%s\n",string);
+    }
+    else
+    {
+        /*Print highscore table for all games */
+        pager(type==0?"Game Statistics":"High Scores",string,2,header);
+    }
     free(header[0]);
     free(header[1]);
     free(string);

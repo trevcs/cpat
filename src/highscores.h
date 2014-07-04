@@ -16,7 +16,7 @@
 int write_hs(void);
 void initialise_hs(void);
 void read_hs(void);
-void game_stats(int type);
+void game_stats(int type,int docat);
 
 #endif /* !CPAT_HIGHSCORES_H */
 /* document.h ends here */

@@ -2,11 +2,11 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ(2.59)
-AC_INIT(cpat,1.2.2,[trev@highwater.co.nz])
+AC_INIT(cpat,1.2.3,[trev@highwater.co.nz])
 AC_CONFIG_AUX_DIR(config)
 AC_CONFIG_SRCDIR([src/spider.c])
 AC_CONFIG_HEADER([config.h])
-AM_INIT_AUTOMAKE(cpat,1.2.2)
+AM_INIT_AUTOMAKE(cpat,1.2.3)
 
 # Checks for programs.
 AC_PROG_CC
