@@ -85,7 +85,7 @@ board on the right.\n\
 \n\
 For general instructions on moving cards around see the help text (press \
 the '?' key in the main game window). The following applies specifically \
-to Freecell.\n\
+to Klondike.\n\
 \n\
 To turn over cards from the deck, the 'oo' command should be used. To move \
 cards from the waste to columns or foundations, 'o' should be used as the \

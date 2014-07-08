@@ -82,9 +82,10 @@ void xtermtitle(char *text)
     
     if (!strncmp(term,"xterm",5) || !strncmp(term,"Eterm",5) || !strncmp(term,"aterm",5) || !strncmp(term,"rxvt",4) || !strncmp(term,"screen",6))
     {
-        l = strlen(text)+30;
+        l = strlen(text)+15;
         p = (char *) malloc (l);
-        snprintf(p,l,"\x1b]1;\x07\x1b]2;%s%s\x07",(l>30?"cpat: ":term),text);
+//        snprintf(p,l,"\x1b]1;\x07\x1b]2;%s%s\x07",(l>30?"cpat: ":term),text);
+        snprintf(p,l,"%c]0;%s%s%c",'\033',(l>15?"cpat: ":term),text,'\007');
         putp(p);
         free(p);
     }
