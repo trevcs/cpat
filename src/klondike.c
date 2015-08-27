@@ -56,7 +56,7 @@ static int init_vars(GameInfo* g)
 
     /* Set initial column lengths */
     for (j=0; j < g->num_cols; j++)
-        g->col_size[j] = g->num_cols-j-1;
+        g->col_size[j] = j;
 
     deal_deck(FACE_DOWN,g);
 
