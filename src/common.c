@@ -145,6 +145,7 @@ create_windows(GameInfo* g)
     /* Now create windows */
     if (g->num_foun)
         g->found = newwin(founpile_h,founpile_w,founpile_y,PILE_X);
+    if (g->debug) fprintf(stderr,"main_h: %d, main_w: %d, main_y: %d, main_x: %d\n",main_h,main_w,main_y,main_x);
     g->main = newwin(main_h,main_w,main_y,main_x);
     if (g->num_free)
         g->free = newwin(freepile_h,freepile_w,freepile_y,freepile_x);
@@ -608,11 +609,14 @@ printcard(WINDOW *win,int y,int x,int value,GameInfo* g)
             }
         } else
             (void) wprintw(win,"%*c",CARD_WIDTH-2,' ');
+        wattroff(win,A_REVERSE | COLOR_PAIR(BACK_COLOR));
     }
     else if (value == NOCARD)
     {
         wattron(win,A_REVERSE | COLOR_PAIR(SPADES_COLOR));
+        if (g->debug) fprintf(stderr,"cardwid: %d\n",CARD_WIDTH-2);
         (void) wprintw(win,"%*c",CARD_WIDTH-2,' ');
+        wattroff(win,A_REVERSE | COLOR_PAIR(SPADES_COLOR));
     }
     else if (value == CARDSPACE)
         (void) wprintw(win,"%*c",CARD_WIDTH-2,' ');
@@ -620,11 +624,13 @@ printcard(WINDOW *win,int y,int x,int value,GameInfo* g)
     {
         wattron(win,A_REVERSE | COLOR_PAIR(HEARTS_COLOR));
         (void) waddstr(win,"SEQ");
+        wattroff(win,A_REVERSE | COLOR_PAIR(HEARTS_COLOR));
     }
     else if (value == CARDSEQB)
     {
         wattron(win,COLOR_PAIR(SPADES_COLOR));
         (void) waddstr(win,"SEQ");
+        wattroff(win,COLOR_PAIR(SPADES_COLOR));
     }
     else
     {
@@ -635,8 +641,10 @@ printcard(WINDOW *win,int y,int x,int value,GameInfo* g)
         } else {
             wprintw(win,"%*c%c",(CARD_WIDTH-1)/2,ranks[value%SUIT_LENGTH],suits[value/SUIT_LENGTH]);
         }
+        if ((value/SUIT_LENGTH)%2) wattroff(win,A_REVERSE);
+        wattroff(win,A_BOLD | COLOR_PAIR(HEARTS_COLOR+value/SUIT_LENGTH%2));
     }
-    wattrset(win,A_NORMAL);
+//     wattrset(win,A_NORMAL);
 }
 
 /* Draws cards on the three different boards.
@@ -695,7 +703,8 @@ draw_piles(WINDOW *win, GameInfo* g)
                 (void) mvwvline(win,0,col*CARD_WIDTH+2,' ',maxy);
                 (void) mvwvline(win,0,col*CARD_WIDTH+3,' ',maxy);
                 (void) mvwvline(win,0,col*CARD_WIDTH+4,' ',maxy);
-                wattrset(win,A_NORMAL);
+                wattroff(win,A_REVERSE | COLOR_PAIR(SPADES_COLOR));
+//                 wattrset(win,A_NORMAL);
                 (void) mvwvline(win,0,col*CARD_WIDTH+5,ACS_ULCORNER,1);
                 (void) mvwvline(win,1,col*CARD_WIDTH+5,ACS_VLINE,maxy-2);
                 (void) mvwvline(win,maxy-1,col*CARD_WIDTH+5,ACS_LLCORNER,1);
@@ -772,9 +781,12 @@ draw_piles(WINDOW *win, GameInfo* g)
     {
         p = (win==g->free) ? &g->freepile[0] : &g->foundation[0];
         num_rows = (win==g->free) ? g->num_free : g->num_foun;
-        for (row=0; row < num_rows; row++)
+        for (row=0; row < num_rows; row++) {
+            if (g->debug) fprintf(stderr,"cardy: %d, cardx: %d\n",row*CARD_HEIGHT,0);
             printcard(win,row*CARD_HEIGHT,0,*p++,g);
+        }
     }
+    box(win, 0, 0);
     wrefresh(win);
 }
 
@@ -829,12 +841,13 @@ init_board(WINDOW *win,GameInfo* g)
 
     wbkgdset(win, boardbkgd);
     wclear(win);
-    box(win, 0, 0);
     if (win==g->main)
         for (i=0;i<g->num_cols;g->print_col[i++]=1)
             mvwaddch(win,1,i*CARD_WIDTH+(CARD_WIDTH+2)/2,i+'a');
-    else if (win==g->free)
+    else if (win==g->free) {
+        if (g->debug) fprintf(stderr,"freex: %d, freey: %d\n",g->num_free*CARD_HEIGHT+1,+(CARD_WIDTH+2)/2);
         mvwaddch(win,g->num_free*CARD_HEIGHT+1,+(CARD_WIDTH+2)/2,'o');
+    }
     else if (win==g->found)
         mvwaddch(win,g->num_foun*CARD_HEIGHT+1,+(CARD_WIDTH+2)/2,'p');
     draw_piles(win,g);
