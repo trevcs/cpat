@@ -594,7 +594,7 @@ printcard(WINDOW *win,int y,int x,int value,GameInfo* g)
     wmove(win,y+2,x+2);
     if (value <= CARDBACK)
     {
-        wattron(win,A_REVERSE | COLOR_PAIR(BACK_COLOR));
+        wattron(win, COLOR_PAIR(BACK_COLOR));
         if (value==CARDBACK) {
             if (CARD_WIDTH > 5) {
                 (void) wprintw(win,"%*d%*c",(CARD_WIDTH+1)/2,g->face_down,(CARD_WIDTH-4)/2,' ');
@@ -609,14 +609,14 @@ printcard(WINDOW *win,int y,int x,int value,GameInfo* g)
             }
         } else
             (void) wprintw(win,"%*c",CARD_WIDTH-2,' ');
-        wattroff(win,A_REVERSE | COLOR_PAIR(BACK_COLOR));
+        wattroff(win, COLOR_PAIR(BACK_COLOR));
     }
     else if (value == NOCARD)
     {
-        wattron(win,A_REVERSE | COLOR_PAIR(SPADES_COLOR));
+        wattron(win, COLOR_PAIR(SPACE_COLOR));
         if (g->debug) fprintf(stderr,"cardwid: %d\n",CARD_WIDTH-2);
         (void) wprintw(win,"%*c",CARD_WIDTH-2,' ');
-        wattroff(win,A_REVERSE | COLOR_PAIR(SPADES_COLOR));
+        wattroff(win, COLOR_PAIR(SPACE_COLOR));
     }
     else if (value == CARDSPACE)
         (void) wprintw(win,"%*c",CARD_WIDTH-2,' ');
@@ -628,21 +628,29 @@ printcard(WINDOW *win,int y,int x,int value,GameInfo* g)
     }
     else if (value == CARDSEQB)
     {
-        wattron(win,COLOR_PAIR(SPADES_COLOR));
+        wattron(win,A_REVERSE | COLOR_PAIR(SPADES_COLOR));
         (void) waddstr(win,"SEQ");
-        wattroff(win,COLOR_PAIR(SPADES_COLOR));
+        wattroff(win,A_REVERSE | COLOR_PAIR(SPADES_COLOR));
     }
     else
     {
-        wattron(win,A_BOLD | COLOR_PAIR(HEARTS_COLOR+value/SUIT_LENGTH%2));
-        if ((value/SUIT_LENGTH)%2) wattron(win,A_REVERSE);
+        wattron(win,A_BOLD);
+        if ((value/SUIT_LENGTH)%2) {
+            wattron(win,COLOR_PAIR(SPADES_COLOR));
+        } else {
+            wattron(win,COLOR_PAIR(HEARTS_COLOR));
+        }
         if (CARD_WIDTH > 5) {
             wprintw(win,"%*c%c%*c",(CARD_WIDTH-1)/2,ranks[value%SUIT_LENGTH],suits[value/SUIT_LENGTH],CARD_WIDTH/2-2,' ');
         } else {
             wprintw(win,"%*c%c",(CARD_WIDTH-1)/2,ranks[value%SUIT_LENGTH],suits[value/SUIT_LENGTH]);
         }
-        if ((value/SUIT_LENGTH)%2) wattroff(win,A_REVERSE);
-        wattroff(win,A_BOLD | COLOR_PAIR(HEARTS_COLOR+value/SUIT_LENGTH%2));
+        if ((value/SUIT_LENGTH)%2) {
+            wattroff(win,COLOR_PAIR(SPADES_COLOR));
+        } else {
+            wattroff(win,COLOR_PAIR(HEARTS_COLOR));
+        }
+        wattroff(win,A_BOLD);
     }
 //     wattrset(win,A_NORMAL);
 }
@@ -699,11 +707,13 @@ draw_piles(WINDOW *win, GameInfo* g)
                 (void) mvwvline(win,0,col*CARD_WIDTH+1,ACS_URCORNER,1);
                 (void) mvwvline(win,1,col*CARD_WIDTH+1,ACS_VLINE,maxy-2);
                 (void) mvwvline(win,maxy-1,col*CARD_WIDTH+1,ACS_LRCORNER,1);
-                wattron(win,A_REVERSE | COLOR_PAIR(SPADES_COLOR));
+                wattron(win, COLOR_PAIR(SPADES_COLOR));
+//                 wattron(win, A_REVERSE);
                 (void) mvwvline(win,0,col*CARD_WIDTH+2,' ',maxy);
                 (void) mvwvline(win,0,col*CARD_WIDTH+3,' ',maxy);
                 (void) mvwvline(win,0,col*CARD_WIDTH+4,' ',maxy);
-                wattroff(win,A_REVERSE | COLOR_PAIR(SPADES_COLOR));
+                wattroff(win, COLOR_PAIR(SPADES_COLOR));
+//                 wattroff(win, A_REVERSE);
 //                 wattrset(win,A_NORMAL);
                 (void) mvwvline(win,0,col*CARD_WIDTH+5,ACS_ULCORNER,1);
                 (void) mvwvline(win,1,col*CARD_WIDTH+5,ACS_VLINE,maxy-2);

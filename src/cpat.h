@@ -126,9 +126,11 @@ typedef long time_t;
 #define FACE_UP         0
 #define FACE_DOWN       100
 
+#define BLANK_COLOR     1
 #define BACK_COLOR      4
+#define SPACE_COLOR     3
 #define HEARTS_COLOR    6
-#define SPADES_COLOR    7
+#define SPADES_COLOR    8
 
 #define PACK_SIZE       52
 
@@ -221,7 +223,7 @@ struct timespec pauseleft;
 HighScores hs;
 
 /* This is the background color of the boards */
-static chtype boardbkgd = ' ' | COLOR_PAIR(SPADES_COLOR);
+static chtype boardbkgd = ' ' | COLOR_PAIR(BLANK_COLOR);
 
 /* Game names */
 static char *names[NUM_GAMES] =

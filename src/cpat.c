@@ -357,8 +357,12 @@ menu(char *title,char **queries,int num_queries,
     wrefresh(outer);
 
     input = newwin(inner_h,inner_w,inner_y,inner_x);
-    wattron(input,A_REVERSE | COLOR_PAIR(BACK_COLOR) | A_BOLD);
-    wbkgdset(input, COLOR_PAIR(BACK_COLOR) | A_REVERSE | A_BOLD);
+//     wattron(input,A_REVERSE | COLOR_PAIR(BACK_COLOR) | A_BOLD);
+//     wbkgdset(input, COLOR_PAIR(BACK_COLOR) | A_REVERSE | A_BOLD);
+    wattron(input,  COLOR_PAIR(BACK_COLOR));
+    wbkgdset(input, COLOR_PAIR(BACK_COLOR));
+//     wattron(input,A_REVERSE | COLOR_PAIR(BACK_COLOR));
+//     wbkgdset(input, COLOR_PAIR(BACK_COLOR) | A_REVERSE);
     wclear(input);
 
     total_lines = 1;
@@ -547,8 +551,13 @@ main(int argc, char **argv, char *envp[])
     initscr();
     start_color();
     init_pair(  HEARTS_COLOR,   COLOR_WHITE,    COLOR_RED);
-    init_pair(  SPADES_COLOR,   COLOR_BLACK,    COLOR_WHITE);
-    init_pair(  BACK_COLOR,     COLOR_BLUE,     COLOR_WHITE);
+    init_pair(  SPADES_COLOR,   COLOR_WHITE,    COLOR_BLACK);
+    init_pair(  BACK_COLOR,     COLOR_WHITE,    COLOR_BLUE);
+    init_pair(  SPACE_COLOR,    COLOR_WHITE,    COLOR_GREEN);
+    init_pair(  BLANK_COLOR,    COLOR_BLACK,    COLOR_WHITE);
+//     init_pair(  HEARTS_COLOR,   COLOR_WHITE,    COLOR_RED);
+//     init_pair(  SPADES_COLOR,   COLOR_BLACK,    COLOR_WHITE);
+//     init_pair(  BACK_COLOR,     COLOR_BLUE,     COLOR_WHITE);
 
     cbreak();
     nonl();
