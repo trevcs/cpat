@@ -607,8 +607,16 @@ printcard(WINDOW *win,int y,int x,int value,GameInfo* g)
             } else {
                 (void) wprintw(win,"%*d",CARD_WIDTH-2,g->col_size[g->num_cols]+1);
             }
-        } else
-            (void) wprintw(win,"%*c",CARD_WIDTH-2,' ');
+        } else {
+//             (void) wprintw(win,"%*c",CARD_WIDTH-2,' ');
+            if (CARD_WIDTH > 5) {
+                (void) wprintw(win,"%*c%*c",(CARD_WIDTH+1)/2,'+',(CARD_WIDTH-4)/2,' ');
+            } else if (CARD_WIDTH == 5) {
+                (void) wprintw(win,"%*s",CARD_WIDTH-3,"|+|");
+            } else {
+                (void) wprintw(win,"%*c",CARD_WIDTH-2,' ');
+            }
+        }
         wattroff(win, COLOR_PAIR(BACK_COLOR));
     }
     else if (value == NOCARD)

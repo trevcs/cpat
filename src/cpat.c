@@ -546,6 +546,11 @@ main(int argc, char **argv, char *envp[])
 
     initscr();
     start_color();
+    if (can_change_color() && FALSE) {
+        init_color(  COLOR_RED, 900, 200, 100);
+        init_color(COLOR_GREEN, 100, 600, 100);
+        init_color( COLOR_BLUE, 300, 400,1000);
+    }
     init_pair(  HEARTS_COLOR,   COLOR_WHITE,    COLOR_RED);
     init_pair(  SPADES_COLOR,   COLOR_WHITE,    COLOR_BLACK);
     init_pair(  BACK_COLOR,     COLOR_WHITE,    COLOR_BLUE);
