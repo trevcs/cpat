@@ -614,8 +614,10 @@ printcard(WINDOW *win,int y,int x,int value,GameInfo* g)
         } else {
             if (g->card_width <= 4) {
                 (void) wprintw(win,"%*s",g->card_width-2,carddesign2[g->ascii]);
-            } else if (g->card_width%2 == 1) {
+            } else if (g->card_width == 5) {
                 (void) wprintw(win,"%*s%s%-*s",(g->card_width-3)/2,"|",carddesign1[g->ascii],(g->card_width-3)/2,"|");
+            } else if (g->card_width%2 == 1) {
+                (void) wprintw(win,"%*s%s%-*s",(g->card_width-5)/2,"|",carddesign3[g->ascii],(g->card_width-5)/2,"|");
             } else if (g->card_width%2 == 0) {
                 (void) wprintw(win,"%*s%s%-*s",(g->card_width-4)/2,"|",carddesign2[g->ascii],(g->card_width-4)/2,"|");
             }
@@ -634,13 +636,14 @@ printcard(WINDOW *win,int y,int x,int value,GameInfo* g)
     else if (value == CARDSEQR)
     {
         wattron(win,A_REVERSE | COLOR_PAIR(HEARTS_COLOR));
-        (void) waddstr(win,"SEQ");
+//         (void) waddstr(win,"SEQ");
+        (void) wprintw(win,"%*s",(g->card_width+2)/2,"SEQ");
         wattroff(win,A_REVERSE | COLOR_PAIR(HEARTS_COLOR));
     }
     else if (value == CARDSEQB)
     {
         wattron(win,A_REVERSE | COLOR_PAIR(SPADES_COLOR));
-        (void) waddstr(win,"SEQ");
+        (void) wprintw(win,"%*s",(g->card_width+2)/2,"SEQ");
         wattroff(win,A_REVERSE | COLOR_PAIR(SPADES_COLOR));
     }
     else

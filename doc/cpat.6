@@ -6,9 +6,11 @@
 cpat \- a curses-based solitaire game
 .SH SYNOPSIS
 .B cpat 
-.RB [ \-hfRcV ]
+.RB [ \-hfaRcV ]
 .RB [ \-s
 .IR seed ]
+.RB [ \-w
+.IR width ]
 .SH DESCRIPTION
 .B
 cpat 
@@ -24,6 +26,14 @@ prints a short help message.
 .B \-f
 causes the auto-moves to go faster. More 
 of these = more speed.
+.TP
+.B \-w " width"
+set this option to alter the width of the playing cards. It can be
+set to an integer between 2 and 7 [default: 3].
+.TP
+.B \-a
+forces the use of ascii characters for when your terminal does not
+render the suits correctly.
 .TP
 .B \-s " seed"
 .B cpat 

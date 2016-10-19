@@ -480,6 +480,10 @@ main(int argc, char **argv, char *envp[])
                 break;
             case 'w':
                 g.card_width = 2+atoi(optarg);
+                if (g.card_width < 4 | g.card_width > 9) {
+                    fputs ("card width must be between 2 and 7\n", stderr);
+                    exit (1);
+                }
                 break;
             case 'a':
                 g.ascii = 1;
@@ -517,7 +521,7 @@ main(int argc, char **argv, char *envp[])
                 "%s - a curses based solitaire collection\n\n", PACKAGE_NAME);
         fputs (P("-h","     ","--help       ") "print this message\n", out);
         fputs (P("-f","     ","--fast       ") "for faster auto-moves\n", out);
-        fputs (P("-w","WIDTH","--width=WIDTH") "width of card [2-6]\n", out);
+        fputs (P("-w","WIDTH","--width=WIDTH") "width of card [2-7]\n", out);
 #ifdef HAVE_SETLOCALE
         fputs (P("-a","     ","--ascii      ") "force use of ascii characters\n", out);
 #endif
@@ -567,9 +571,9 @@ main(int argc, char **argv, char *envp[])
 
     initscr();
     start_color();
-    if (can_change_color() && FALSE) {
+    if (can_change_color()) {
         init_color(  COLOR_RED, 900, 200, 100);
-        init_color(COLOR_GREEN, 100, 600, 100);
+        init_color(COLOR_GREEN, 300, 600, 100);
         init_color( COLOR_BLUE, 300, 400,1000);
     }
     init_pair(  HEARTS_COLOR,   COLOR_WHITE,    COLOR_RED);

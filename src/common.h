@@ -30,6 +30,7 @@ static char *suits[4][NUM_SUITS] =
 // second version is for when ascii is forced
 static char *carddesign1[2] = {"\xe2\x98\xbc","+"};
 static char *carddesign2[2] = {"\xe2\x98\xbe\xe2\x98\xbd","++"};
+static char *carddesign3[2] = {"\xe2\x98\xbe\xe2\x98\xbc\xe2\x98\xbd"," + "};
 // static char *carddesign = "\xe2\x99\x9b";
 #else
 static char *suits[4][NUM_SUITS] =
@@ -41,6 +42,7 @@ static char *suits[4][NUM_SUITS] =
     };
 static char *carddesign1[2] = {"+","+"};
 static char *carddesign2[2] = {"++","++"};
+static char *carddesign3[2] = {" + "," + "};
 #endif
 
 int create_windows(GameInfo* g);
