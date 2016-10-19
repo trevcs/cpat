@@ -26,14 +26,14 @@ fi
 
 # Checks for header files.
 AC_HEADER_STDC
-AC_CHECK_HEADERS([getopt.h pwd.h])
+AC_CHECK_HEADERS([getopt.h pwd.h locale.h])
 
 # Checks for typedefs, structures, and compiler characteristics.
 AC_CHECK_TYPES([struct timespec])
 
 # Checks for library functions.
 AC_TYPE_SIGNAL
-AC_CHECK_FUNCS([strchr getopt_long nanosleep usleep])
+AC_CHECK_FUNCS([strchr getopt_long nanosleep usleep setlocale])
 AC_CHECK_TYPES(time_t)
 
 AC_CONFIG_FILES([Makefile src/Makefile doc/Makefile])

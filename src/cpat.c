@@ -392,20 +392,22 @@ main(int argc, char **argv, char *envp[])
 {
 #ifdef HAVE_GETOPT_LONG
     struct option  long_options [] = {
-        { "seed", required_argument, 0, 's' },
-        { "no-record", no_argument, 0, 'R' },
-        { "help", no_argument, 0, 'h' },
-        { "print", no_argument, 0, 'p' },
-        { "best", no_argument, 0, 'b' },
-        { "fast", no_argument, 0, 'f' },
-        { "cheat", no_argument, 0, 'c' },
-        { "debug", no_argument, 0, 'd' },
-        { "version", no_argument, 0, 'V' },
-        { NULL, 0, NULL, 0}
+        { "seed"     , required_argument, 0, 's' },
+        { "no-record", no_argument      , 0, 'R' },
+        { "help"     , no_argument      , 0, 'h' },
+        { "print"    , no_argument      , 0, 'p' },
+        { "best"     , no_argument      , 0, 'b' },
+        { "fast"     , no_argument      , 0, 'f' },
+        { "width"    , required_argument, 0, 'w' },
+        { "ascii"    , no_argument      , 0, 'a' },
+        { "cheat"    , no_argument      , 0, 'c' },
+        { "debug"    , no_argument      , 0, 'd' },
+        { "version"  , no_argument      , 0, 'V' },
+        { NULL       , 0                , NULL, 0}
     };
 #endif
     char title[40];
-    char *short_options="s:RdfchVpb";
+    char *short_options="s:Rdfw:achVpb";
     char *home;
     int i;
     int  help_flag = 0;
@@ -429,6 +431,15 @@ main(int argc, char **argv, char *envp[])
     g.debug = 0;
     g.allow_undo = 0;
     g.undo = NULL;
+
+    g.card_width=5;
+
+#ifdef HAVE_SETLOCALE
+    setlocale(LC_ALL, "");
+    g.ascii = 0;
+#else
+    g.ascii = 1;
+#endif
     
     g.seed = (int)time((time_t *)0);
 
@@ -467,6 +478,12 @@ main(int argc, char **argv, char *envp[])
             case 'f':
                 fast_flag*=2;
                 break;
+            case 'w':
+                g.card_width = 2+atoi(optarg);
+                break;
+            case 'a':
+                g.ascii = 1;
+                break;
             case 'b':
                 print_best = 1;
                 break;
@@ -490,22 +507,26 @@ main(int argc, char **argv, char *envp[])
     }
     if (error_flag || help_flag) {
 #ifdef HAVE_GETOPT_LONG
-#  define P(both,short,long) "  " both ", " long "    "
+#  define P(both,short,long) "  " both ", " long "  "
 #else
-#  define P(both,short,long) "  " both " " short "    "
+#  define P(both,short,long) "  " both " " short "  "
 #endif
         FILE *out = error_flag ? stderr : stdout;
         fprintf (out, "usage: %s [OPTION...]\n", prog_name);
         fprintf (out, 
                 "%s - a curses based solitaire collection\n\n", PACKAGE_NAME);
-        fputs (P("-h","    ","--help     ") "print this message\n", out);
-        fputs (P("-f","    ","--fast     ") "for faster auto-moves\n", out);
-        fputs (P("-s","SEED","--seed=SEED") "seed for the deck shuffle\n", out);
-        fputs (P("-R","    ","--no-record") "do not record game stats\n", out);
-        fputs (P("-p","    ","--print    ") "print game statistics\n", out);
-        fputs (P("-b","    ","--best     ") "print best scores\n", out);
-        fputs (P("-c","    ","--cheat    ") "allow undo for all moves\n", out);
-        fputs (P("-V","    ","--version  ") "print the version number\n", out);
+        fputs (P("-h","     ","--help       ") "print this message\n", out);
+        fputs (P("-f","     ","--fast       ") "for faster auto-moves\n", out);
+        fputs (P("-w","WIDTH","--width=WIDTH") "width of card [2-6]\n", out);
+#ifdef HAVE_SETLOCALE
+        fputs (P("-a","     ","--ascii      ") "force use of ascii characters\n", out);
+#endif
+        fputs (P("-s","SEED ","--seed=SEED  ") "seed for the deck shuffle\n", out);
+        fputs (P("-R","     ","--no-record  ") "do not record game stats\n", out);
+        fputs (P("-p","     ","--print      ") "print game statistics\n", out);
+        fputs (P("-b","     ","--best       ") "print best scores\n", out);
+        fputs (P("-c","     ","--cheat      ") "allow undo for all moves\n", out);
+        fputs (P("-V","     ","--version    ") "print the version number\n", out);
         fputs ("\nPlease report bugs to " PACKAGE_BUGREPORT ".\n", out);
         exit (error_flag);
 #undef P

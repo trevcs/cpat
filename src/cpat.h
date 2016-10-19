@@ -41,25 +41,31 @@ extern char *optarg;
 extern int  optind;
 #endif
 
+#ifdef HAVE_LOCALE_H
+#include <locale.h>
+#endif
+
 #include <signal.h>
 #include <time.h>
 
-#if HAVE_NCURSES_H
+#if HAVE_NCURSESW_H
+#  include <ncursesw/curses.h>
+#elif HAVE_NCURSES_H
 #  include <ncurses.h>
 #elif HAVE_CURSES_H
 #  include <curses.h>
 #endif
 
-#if !STDC_HEADERS
-#  if !HAVE_STRCHR
+#ifndef STDC_HEADERS
+#  ifndef HAVE_STRCHR
 #    define strchr index
 #    define strrchr rindex
 #  endif
 #endif
 
 /* If system doesn't have nanosleep, we replace with usleep */
-#if !HAVE_NANOSLEEP
-#  if !HAVE_STRUCT_TIMESPEC
+#ifndef HAVE_NANOSLEEP
+#  ifndef HAVE_STRUCT_TIMESPEC
 struct timespec { 
     long    tv_nsec; 
 };
@@ -139,7 +145,7 @@ typedef long time_t;
 /* It is not possible to have more than 19 cards in a column */
 /* unless playing spider, when technically you could have 66 ! */
 
-#define CARD_WIDTH      5
+// #define CARD_WIDTH      5
 #define CARD_HEIGHT     2
 /* positioning info */
 /* How far down the main board is. */
@@ -200,6 +206,7 @@ typedef struct {
 
     /* Game stats */
     int seed,moves,deals,finished_foundations;
+    int card_width,ascii;
 
     int debug;
 } GameInfo;
@@ -224,6 +231,8 @@ HighScores hs;
 
 /* This is the background color of the boards */
 static chtype boardbkgd = ' ' | COLOR_PAIR(BKGD_COLOR);
+
+static int CARD_WIDTH = 5;
 
 /* Game names */
 static char *names[NUM_GAMES] =
