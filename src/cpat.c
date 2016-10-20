@@ -406,6 +406,8 @@ main(int argc, char **argv, char *envp[])
         { NULL       , 0                , NULL, 0}
     };
 #endif
+    WINDOW *test_win;
+    int testx1,testx2,testy;
     char title[40];
     char *short_options="s:Rdfw:achVpb";
     char *home;
@@ -585,6 +587,25 @@ main(int argc, char **argv, char *envp[])
     cbreak();
     nonl();
     noecho();
+
+    /* This is a test to see of the current locale supports unicode
+     * this character should be two spaces wide if printed correctly.
+     * Seems to work if locale is not utf8, but doesn't work if locale
+     * is utf8 and the font doesn't have the character (e.g. VT).
+     */
+    if (g.ascii == 0) {
+        test_win = newwin(2, 25, 0, 0);
+        getyx(test_win,testy,testx1);
+        waddstr(test_win,"\xe3\x81\x82");
+        getyx(test_win,testy,testx2);
+        delwin(test_win);
+        if (testx2-testx1 != 2) {
+            g.ascii = 1;
+            fputs ("Warning: can't display unicode, try changing locale e.g.:\n\r", stderr);
+            fputs ("   LANG=en_US.UTF-8  cpat\n\r", stderr);
+        }
+    }
+        
 //    intrflush(stdscr,FALSE);
 
     for (i = 0;i < 5;i++) items[i+NUM_GAMES] = items[i];

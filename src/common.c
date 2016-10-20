@@ -145,7 +145,7 @@ create_windows(GameInfo* g)
     /* Now create windows */
     if (g->num_foun)
         g->found = newwin(founpile_h,founpile_w,founpile_y,PILE_X);
-    if (g->debug) fprintf(stderr,"main_h: %d, main_w: %d, main_y: %d, main_x: %d\n",main_h,main_w,main_y,main_x);
+//     if (g->debug) fprintf(stderr,"main_h: %d, main_w: %d, main_y: %d, main_x: %d\n",main_h,main_w,main_y,main_x);
     g->main = newwin(main_h,main_w,main_y,main_x);
     if (g->num_free)
         g->free = newwin(freepile_h,freepile_w,freepile_y,freepile_x);
@@ -627,7 +627,7 @@ printcard(WINDOW *win,int y,int x,int value,GameInfo* g)
     else if (value == NOCARD)
     {
         wattron(win, COLOR_PAIR(SPACE_COLOR));
-        if (g->debug) fprintf(stderr,"cardwid: %d\n",g->card_width-2);
+//         if (g->debug) fprintf(stderr,"cardwid: %d\n",g->card_width-2);
         (void) wprintw(win,"%*c",g->card_width-2,' ');
         wattroff(win, COLOR_PAIR(SPACE_COLOR));
     }
@@ -810,7 +810,7 @@ draw_piles(WINDOW *win, GameInfo* g)
         p = (win==g->free) ? &g->freepile[0] : &g->foundation[0];
         num_rows = (win==g->free) ? g->num_free : g->num_foun;
         for (row=0; row < num_rows; row++) {
-            if (g->debug) fprintf(stderr,"cardy: %d, cardx: %d\n",row*CARD_HEIGHT,0);
+//             if (g->debug) fprintf(stderr,"cardy: %d, cardx: %d\n",row*CARD_HEIGHT,0);
             printcard(win,row*CARD_HEIGHT,0,*p++,g);
         }
     }
@@ -873,7 +873,7 @@ init_board(WINDOW *win,GameInfo* g)
         for (i=0;i<g->num_cols;g->print_col[i++]=1)
             mvwaddch(win,1,i*g->card_width+(g->card_width+2)/2,i+'a');
     else if (win==g->free) {
-        if (g->debug) fprintf(stderr,"freex: %d, freey: %d\n",g->num_free*CARD_HEIGHT+1,+(g->card_width+2)/2);
+//         if (g->debug) fprintf(stderr,"freex: %d, freey: %d\n",g->num_free*CARD_HEIGHT+1,+(g->card_width+2)/2);
         mvwaddch(win,g->num_free*CARD_HEIGHT+1,+(g->card_width+2)/2,'o');
     }
     else if (win==g->found)
