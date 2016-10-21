@@ -436,13 +436,13 @@ main(int argc, char **argv, char *envp[])
 
     g.card_width=5;
 
-#ifdef HAVE_SETLOCALE
+#if !defined HAVE_NCURSESW || !defined HAVE_SETLOCALE
+    g.ascii = 1;
+#else
     setlocale(LC_ALL, "");
     g.ascii = 0;
-#else
-    g.ascii = 1;
 #endif
-    
+
     g.seed = (int)time((time_t *)0);
 
     /* `basename' seems to be non-standard.  So we avoid it.  */
@@ -524,7 +524,7 @@ main(int argc, char **argv, char *envp[])
         fputs (P("-h","     ","--help       ") "print this message\n", out);
         fputs (P("-f","     ","--fast       ") "for faster auto-moves\n", out);
         fputs (P("-w","WIDTH","--width=WIDTH") "width of card [2-7]\n", out);
-#ifdef HAVE_SETLOCALE
+#ifdef HAVE_NCURSESW
         fputs (P("-a","     ","--ascii      ") "force use of ascii characters\n", out);
 #endif
         fputs (P("-s","SEED ","--seed=SEED  ") "seed for the deck shuffle\n", out);

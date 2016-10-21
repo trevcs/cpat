@@ -16,10 +16,9 @@
 //static char *ranks[SUIT_LENGTH] =
 //        {" A"," 2"," 3"," 4"," 5"," 6"," 7"," 8"," 9"," T"," J"," Q"," K"};
 static char ranks[] = {'A','2','3','4','5','6','7','8','9','T','J','Q','K'};
-#if HAVE_NCURSESW
 // 4 suits columns are for (1) main suit character, (2) character to
 // use as a prefix to the rank, (3)+(4) as for (1) and (2) but for when
-// ascii is forced
+// ascii is forced due to not having ncursesw or being in the wrong locale
 static char *suits[4][NUM_SUITS] =
     {   
         {"\xe2\x99\xa5","\xe2\x99\xa0","\xe2\x99\xa6","\xe2\x99\xa3"},
@@ -32,18 +31,6 @@ static char *carddesign1[2] = {"\xe2\x98\xbc","+"};
 static char *carddesign2[2] = {"\xe2\x98\xbe\xe2\x98\xbd","++"};
 static char *carddesign3[2] = {"\xe2\x98\xbe\xe2\x98\xbc\xe2\x98\xbd"," + "};
 // static char *carddesign = "\xe2\x99\x9b";
-#else
-static char *suits[4][NUM_SUITS] =
-    {   
-        {"H","S","D","C"},
-        {" "," "," "," "},
-        {"H","S","D","C"},
-        {" "," "," "," "} 
-    };
-static char *carddesign1[2] = {"+","+"};
-static char *carddesign2[2] = {"++","++"};
-static char *carddesign3[2] = {" + "," + "};
-#endif
 
 int create_windows(GameInfo* g);
 void kill_windows(GameInfo* g);
