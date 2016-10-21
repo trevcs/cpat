@@ -2,7 +2,7 @@
 # Process this file with autoconf to produce a configure script.
 
 # AC_PREREQ(2.59)
-AC_INIT(cpat,1.3.0,[trev@highwater.co.nz])
+AC_INIT(cpat,1.4.0,[trev@highwater.co.nz])
 
 # AC_CONFIG_AUX_DIR(config)
 AC_CONFIG_SRCDIR([src/spider.c])
