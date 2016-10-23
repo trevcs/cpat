@@ -26,11 +26,14 @@ static char *suits[4][NUM_SUITS] =
         {"H","S","D","C"},
         {" "," "," "," "}
     };
+// carddesign is what ends up on the back of the cards
 // second version is for when ascii is forced
-static char *carddesign1[2] = {"\xe2\x98\xbc","+"};
-static char *carddesign2[2] = {"\xe2\x98\xbe\xe2\x98\xbd","++"};
-static char *carddesign3[2] = {"\xe2\x98\xbe\xe2\x98\xbc\xe2\x98\xbd"," + "};
+static char *carddesign1[2] = {"\xe2\x98\xbc"," "};
+static char *carddesign2[2] = {"\xe2\x98\xbe\xe2\x98\xbd","  "};
+static char *carddesign3[2] = {"\xe2\x98\xbe\xe2\x98\xbc\xe2\x98\xbd","   "};
 // static char *carddesign = "\xe2\x99\x9b";
+// cardedge goes on either side of the card design if enough room
+static char *cardedge[2]    = {"|"," "};
 
 int create_windows(GameInfo* g);
 void kill_windows(GameInfo* g);

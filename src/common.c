@@ -599,27 +599,48 @@ printcard(WINDOW *win,int y,int x,int value,GameInfo* g)
             if (g->card_width <= 5) {
                 (void) wprintw(win,"%*d",g->card_width-2,g->face_down);
             } else if (g->card_width%2 == 1) {
-                (void) wprintw(win,"%*s%3d%-*s",(g->card_width-5)/2,"|",g->face_down,(g->card_width-5)/2,"|");
+                (void) wprintw(win,"%*s%3d%-*s",
+                        (g->card_width-5)/2,cardedge[g->ascii],
+                        g->face_down,
+                        (g->card_width-5)/2,cardedge[g->ascii]);
             } else if (g->card_width%2 == 0) {
-                (void) wprintw(win,"%*s%2d%-*s",(g->card_width-4)/2,"|",g->face_down,(g->card_width-4)/2,"|");
+                (void) wprintw(win,"%*s%2d%-*s",
+                        (g->card_width-4)/2,cardedge[g->ascii],
+                        g->face_down,
+                        (g->card_width-4)/2,cardedge[g->ascii]);
             }
         } else if (value==CARDRESERVE) {
             if (g->card_width <= 5) {
                 (void) wprintw(win,"%*d",g->card_width-2,g->col_size[g->num_cols]+1);
             } else if (g->card_width%2 == 1) {
-                (void) wprintw(win,"%*s%3d%-*s",(g->card_width-5)/2,"|",g->col_size[g->num_cols]+1,(g->card_width-5)/2,"|");
+                (void) wprintw(win,"%*s%3d%-*s",
+                        (g->card_width-5)/2,cardedge[g->ascii],
+                        g->col_size[g->num_cols]+1,
+                        (g->card_width-5)/2,cardedge[g->ascii]);
             } else if (g->card_width%2 == 0) {
-                (void) wprintw(win,"%*s%2d%-*s",(g->card_width-4)/2,"|",g->col_size[g->num_cols]+1,(g->card_width-4)/2,"|");
+                (void) wprintw(win,"%*s%2d%-*s",
+                        (g->card_width-4)/2,cardedge[g->ascii],
+                        g->col_size[g->num_cols]+1,
+                        (g->card_width-4)/2,cardedge[g->ascii]);
             }
         } else {
             if (g->card_width <= 4) {
                 (void) wprintw(win,"%*s",g->card_width-2,carddesign2[g->ascii]);
             } else if (g->card_width == 5) {
-                (void) wprintw(win,"%*s%s%-*s",(g->card_width-3)/2,"|",carddesign1[g->ascii],(g->card_width-3)/2,"|");
+                (void) wprintw(win,"%*s%s%-*s",
+                        (g->card_width-3)/2,cardedge[g->ascii],
+                        carddesign1[g->ascii],
+                        (g->card_width-3)/2,cardedge[g->ascii]);
             } else if (g->card_width%2 == 1) {
-                (void) wprintw(win,"%*s%s%-*s",(g->card_width-5)/2,"|",carddesign3[g->ascii],(g->card_width-5)/2,"|");
+                (void) wprintw(win,"%*s%s%-*s",
+                        (g->card_width-5)/2,cardedge[g->ascii],
+                        carddesign3[g->ascii],
+                        (g->card_width-5)/2,cardedge[g->ascii]);
             } else if (g->card_width%2 == 0) {
-                (void) wprintw(win,"%*s%s%-*s",(g->card_width-4)/2,"|",carddesign2[g->ascii],(g->card_width-4)/2,"|");
+                (void) wprintw(win,"%*s%s%-*s",
+                        (g->card_width-4)/2,cardedge[g->ascii],
+                        carddesign2[g->ascii],
+                        (g->card_width-4)/2,cardedge[g->ascii]);
             }
         }
         wattroff(win, COLOR_PAIR(BACK_COLOR));
@@ -655,13 +676,24 @@ printcard(WINDOW *win,int y,int x,int value,GameInfo* g)
             wattron(win,COLOR_PAIR(HEARTS_COLOR));
         }
         if (g->card_width <= 4) {
-            (void) wprintw(win,"%c%s",ranks[value%SUIT_LENGTH],suits[0+g->ascii*2][value/SUIT_LENGTH]);
+            (void) wprintw(win,"%c%s",
+                    ranks[value%SUIT_LENGTH],
+                    suits[0+g->ascii*2][value/SUIT_LENGTH]);
         } else if (g->card_width == 5) {
-            (void) wprintw(win,"%s%c%s",suits[1+g->ascii*2][value/SUIT_LENGTH],ranks[value%SUIT_LENGTH],suits[0+g->ascii*2][value/SUIT_LENGTH]);
+            (void) wprintw(win,"%s%c%s",
+                    suits[1+g->ascii*2][value/SUIT_LENGTH],
+                    ranks[value%SUIT_LENGTH],
+                    suits[0+g->ascii*2][value/SUIT_LENGTH]);
         } else if (g->card_width%2 == 1) {
-            (void) wprintw(win,"%*c%s%c%s%*c",(g->card_width-5)/2,' ',suits[1+g->ascii*2][value/SUIT_LENGTH],ranks[value%SUIT_LENGTH],suits[0+g->ascii*2][value/SUIT_LENGTH],(g->card_width-5)/2,' ');
+            (void) wprintw(win,"%*c%s%c%s%*c",
+                    (g->card_width-5)/2,' ',suits[1+g->ascii*2][value/SUIT_LENGTH],
+                    ranks[value%SUIT_LENGTH],suits[0+g->ascii*2][value/SUIT_LENGTH],
+                    (g->card_width-5)/2,' ');
         } else if (g->card_width%2 == 0) {
-            (void) wprintw(win,"%*c%s%*c",(g->card_width-1)/2,ranks[value%SUIT_LENGTH],suits[0+g->ascii*2][value/SUIT_LENGTH],g->card_width/2-2,' ');
+            (void) wprintw(win,"%*c%s%*c",
+                    (g->card_width-1)/2,ranks[value%SUIT_LENGTH],
+                    suits[0+g->ascii*2][value/SUIT_LENGTH],
+                    g->card_width/2-2,' ');
         }
         if ((value/SUIT_LENGTH)%2) {
             wattroff(win,COLOR_PAIR(SPADES_COLOR));
