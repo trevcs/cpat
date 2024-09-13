@@ -28,6 +28,10 @@
 #include "document.h"
 #include "highscores.h"
 
+HighScores hs;
+struct timespec pauselength;
+struct timespec pauseleft;
+
 /* To catch kill signals and exit cleanly */
 void
 die(int onsig)
@@ -550,7 +554,7 @@ main(int argc, char **argv, char *envp[])
     if (hs.available) 
     {
         (void)strncpy(hs.filename,home,100);
-        (void)strncat(hs.filename,"/.cpat_scores",13);
+        (void)strncat(hs.filename,"/.cpat_scores",14);
 
         initialise_hs();
         read_hs();

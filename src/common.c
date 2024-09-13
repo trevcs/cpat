@@ -349,12 +349,11 @@ roll_deckcards(GameInfo* g)
  * number: number of cards to be in sequence.
  * col: column-label (0-num_cols-1)
  * direction: either ASC, DESC or ANY_ORDER, ASC means the rank 
- *          ascends from the bottom
- * of the column to the top.
+ *          ascends from the bottom of the column to the top.
  * type: IN_SUIT  - checks if cards are the same suit
  *       ALT_COL  - checks if cards alternate red/black/red/...
  *       ANY_SUIT - ignores suit
- * wrap: either WRAP of NO_WRAP. If WRAP sequences can loop from Ace to King.
+ * wrap: either WRAP or NO_WRAP. If WRAP sequences can loop from Ace to King.
  * returns 1 for fail.
  */
 int

@@ -206,7 +206,7 @@ game_stats(int type,int docat)
             if (type==0 && hs.total_games[i][j]>0)
             {
                 if (firsttime++) 
-                    strncat(string,"\n",1);
+                    strncat(string,"\n",2);
                 else 
                     string[0]='\0';
                 strftime(time1,11,"%F",localtime(&hs.date_first_game[i][j]));
@@ -222,7 +222,7 @@ game_stats(int type,int docat)
             else if (type==1 && hs.finished_games[i][j]>0)
             {
                 if (firsttime++) 
-                    strncat(string,"\n",1);
+                    strncat(string,"\n",2);
                 else 
                     string[0]='\0';
                 strftime(time1,11,"%F",localtime(&hs.date_best_game[i][j]));
